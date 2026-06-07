@@ -103,6 +103,8 @@ SUPABASE_URL=http://127.0.0.1:54321
 SUPABASE_KEY=<anon key from CLI output>
 ```
 
+> The local `supabase start` stack still issues a legacy **anon** key — that's expected for local dev. A **cloud** project instead uses the new **Publishable key** (see below).
+
 5. To stop the stack when done:
 
 ```bash
@@ -120,11 +122,11 @@ If you prefer to use a hosted Supabase project, add these variables to your `.en
 | Variable       | Description                                                |
 | -------------- | ---------------------------------------------------------- |
 | `SUPABASE_URL` | Project URL from Supabase dashboard → Settings → API       |
-| `SUPABASE_KEY` | `anon` public key from Supabase dashboard → Settings → API |
+| `SUPABASE_KEY` | **Publishable key** (`sb_publishable_…`) from Supabase dashboard → Settings → API Keys (RLS-respecting; do **not** use the Secret key) |
 
 ```
 SUPABASE_URL=https://<project-ref>.supabase.co
-SUPABASE_KEY=<anon-key>
+SUPABASE_KEY=<publishable-key>
 ```
 
 ### Email confirmation in local development

@@ -30,7 +30,7 @@ The insight: existing tools are dose reminders and daily trackers — they assum
 ## Success Criteria
 
 ### Primary
-- A patient enters their medications once and is reliably warned *before* any medication runs out and *before* any medication expires — eliminating mid-week surprise shortages and discovery of already-expired pills.
+- A patient enters their medications once and, on opening the app, is reliably warned *before* any medication runs out and *before* any medication expires — eliminating mid-week surprise shortages and discovery of already-expired pills. (Proactive out-of-app notification is deferred to v2 — see FR-009.)
 
 ### Secondary
 - After repeated refills over weeks, the predicted run-out dates stay trustworthy, so the patient keeps relying on PillStocker instead of counting pills manually.
@@ -66,7 +66,9 @@ The insight: existing tools are dose reminders and daily trackers — they assum
 - Medications are ordered by expiry date, soonest first
 - The expiry status never shows more time remaining than the expiry date actually allows (guardrail)
 
-### US-03: Patient is reminded before running out, without opening the app
+### US-03: Patient is reminded before running out, without opening the app (deferred to v2)
+
+> Deferred to v2 (2026-06-06) alongside FR-009. Out-of-app notifications are out of MVP scope; the MVP warns in-app via the run-out view (US-01). The story and its acceptance criteria are retained for v2 planning.
 
 - **Given** a signed-in user with a medication approaching its predicted run-out date
 - **When** the run-out date falls within the user's configured reminder margin
@@ -102,8 +104,9 @@ The insight: existing tools are dose reminders and daily trackers — they assum
   > Socrates: Counter considered — "configurable thresholds are premature for v1." Resolution: ship fixed default thresholds in v1; threshold customization demoted to nice-to-have (FR-012).
 - FR-008: User can see medications ordered by run-out date, soonest first. Priority: must-have
   > Socrates: Counter considered — "a single fixed sort is too rigid for a large list." Resolution: kept soonest-first as the v1 default; additional sort/grouping options deferred to v2.
-- FR-009: User receives an out-of-app notification (push/OS/email) before a medication runs out, with a configurable margin. Priority: must-have
-  > Socrates: Counter considered — "an in-app-only reminder never reaches a user who forgets to open the app — which is the whole problem." Resolution: changed from in-app to an out-of-app notification. Accepted as the single biggest new cost surfaced in this round; pushes the MVP estimate toward the full 3 weeks.
+- FR-009: User receives an out-of-app notification (push/OS/email) before a medication runs out, with a configurable margin. Priority: nice-to-have (deferred to v2)
+  > Socrates: Counter considered — "an in-app-only reminder never reaches a user who forgets to open the app — which is the whole problem." Resolution: changed from in-app to an out-of-app notification. Accepted as the single biggest new cost surfaced in this round.
+  > Deferred to v2 (2026-06-06): out-of-app notification — together with its unresolved delivery channel (Open Question 4; no SMTP on Cloudflare Workers) — is the largest cost and reliability surface in the MVP and is cut to protect the 3-week timeline. The MVP delivers the run-out warning in-app via the daily view (FR-006–FR-008); proactive notification ships in v2.
 
 ### Expiry tracking (shelf view)
 - FR-010: User can see medications that have an expiry date flagged as soon-to-expire or expired, colour-coded and ordered by expiry date (soonest first). Priority: must-have
@@ -124,8 +127,9 @@ The insight: existing tools are dose reminders and daily trackers — they assum
 ## Non-Functional Requirements
 
 - Medication data is readable only by its owner: it is never exposed to another user and never readable by anyone — including operators — while in transit or at rest.
-- An out-of-app run-out reminder reaches the user no later than the configured margin (default one week) before a medication's predicted run-out date; a reminder that arrives late or not at all is a failure.
 - Once saved, a medication and its pill count and expiry date persist across sessions and across the user's devices with no loss or corruption.
+
+> Deferred to v2 (with FR-009): an out-of-app run-out reminder must reach the user no later than the configured margin (default one week) before a medication's predicted run-out date; a reminder that arrives late or not at all is a failure. This timeliness guarantee takes effect once notifications ship in v2.
 
 ## Business Logic
 
@@ -135,7 +139,7 @@ The rule consumes user-supplied inputs only: for each medication, the current pi
 
 The output, per medication, is a number of days of supply remaining and/or days until expiry, plus a status — safe, warning, or critical — derived by comparing those numbers against the threshold bands and the user's reminder margin.
 
-The user encounters the rule three ways: each medication appears colour-coded and ordered by urgency in the relevant view, the landing screen shows counts of medications running low and expiring soon, and an out-of-app notification fires when a medication enters the reminder window ahead of its predicted run-out.
+The user encounters the rule two ways in the MVP: each medication appears colour-coded and ordered by urgency in the relevant view, and the landing screen shows counts of medications running low and expiring soon. (A third path — an out-of-app notification when a medication enters the reminder window ahead of its predicted run-out — is deferred to v2 with FR-009.)
 
 ## Access Control
 
@@ -154,7 +158,7 @@ Account-based: the patient signs up and signs in to reach the app; their medicat
 
 1. **Non-daily dosing schedules** — the MVP models only morning/midday/night daily dosing. Weekly, every-other-day, tapering, and as-needed (PRN) regimens are unsupported. Owner: user. Deferred to v2 unless a target user needs it sooner.
 2. **Adherence drift** — run-out prediction assumes the user takes the scheduled dose every day. Real skip/double doses are not tracked; the user re-syncs via refills/edits. Owner: user. Revisit if predictions prove untrustworthy in practice.
-3. **Expiry notifications** — expiry is surfaced visually (FR-010) but, unlike run-out, has no out-of-app notification in the MVP. Owner: user. Decide whether expiry warrants its own notification in v2.
-4. **Notification channel** — FR-009 specifies an out-of-app notification but not the channel. Owner: downstream tech-stack selection.
+3. **Expiry notifications** — expiry is surfaced visually (FR-010); out-of-app notification (run-out and expiry alike) is deferred to v2. Owner: user. Decide notification scope in v2.
+4. **Notification channel** — FR-009 (deferred to v2) specifies an out-of-app notification but not the channel; note there is no SMTP on Cloudflare Workers, so v2 needs an HTTP email/push provider. Owner: v2 planning.
 
 _Resolved during shaping: health-data confidentiality (formerly a fifth open question) was promoted to a hard Non-Functional Requirement — owner-only readability, no exposure in transit or at rest._
