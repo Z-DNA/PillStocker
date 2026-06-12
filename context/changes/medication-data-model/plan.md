@@ -213,12 +213,12 @@ Negligible at this scale (single-user, low QPS, small data). The `user_id` index
 
 #### Automated
 
-- [x] 2.1 Types regenerate: `npm run db:types` writes a non-empty `src/lib/database.types.ts` containing `medications`
-- [x] 2.2 Astro types sync: `npx astro sync` succeeds
-- [x] 2.3 Build passes with typed client: `npm run build`
-- [x] 2.4 Lint passes: `npm run lint`
+- [x] 2.1 Types regenerate: `npm run db:types` writes a non-empty `src/lib/database.types.ts` containing `medications` — abeb2e2
+- [x] 2.2 Astro types sync: `npx astro sync` succeeds — abeb2e2
+- [x] 2.3 Build passes with typed client: `npm run build` — abeb2e2
+- [x] 2.4 Lint passes: `npm run lint` — abeb2e2
 
 #### Manual
 
-- [x] 2.5 `createClient(...)` returns a typed client — `.from('medications')` autocompletes; a sample typed select compiles
-- [x] 2.6 README no longer claims "no tables/migrations" and describes the migration + `db:types` workflow
+- [x] 2.5 `createClient(...)` returns a typed client — `.from('medications')` autocompletes; a sample typed select compiles — abeb2e2
+- [x] 2.6 README no longer claims "no tables/migrations" and describes the migration + `db:types` workflow — abeb2e2
