@@ -30,7 +30,7 @@ PillStocker helps people on multiple long-term medications see, in one place, wh
 | ID    | Change ID              | Outcome (user can …)                                                          | Prerequisites    | PRD refs                                | Status   |
 | ----- | ---------------------- | ----------------------------------------------------------------------------- | ---------------- | --------------------------------------- | -------- |
 | F-01  | medication-data-model  | (foundation) medication record schema with owner-only RLS + soft-delete; typed access | —        | FR-002, FR-005, NFR                     | done     |
-| S-01  | runout-forecast        | add a med with dosing and see its predicted run-out date, colour-coded & sorted | F-01           | US-01, FR-001, FR-002, FR-006, FR-007, FR-008 | proposed |
+| S-01  | runout-forecast        | add a med with dosing and see its predicted run-out date, colour-coded & sorted | F-01           | US-01, FR-001, FR-002, FR-006, FR-007, FR-008 | ready    |
 | S-02  | expiry-shelf           | see meds with expiry dates flagged (expired vs soon) and sorted soonest-first  | F-01, S-01      | US-02, FR-002, FR-010                   | proposed |
 | S-03  | medication-management  | refill, edit, and archive (soft-delete) a medication                           | F-01, S-01      | FR-003, FR-004, FR-005                  | proposed |
 | S-04  | cabinet-summary        | see a landing screen counting meds running low and expiring soon               | F-01, S-01, S-02 | FR-011                                  | proposed |
@@ -75,7 +75,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Auth is code-present but operationally inactive — Worker secrets (`SUPABASE_URL`/`SUPABASE_KEY`) and Supabase Auth URLs (deploy-plan G3/G4) must be set before any signed-in flow verifies end-to-end. Owner: user. Block: no.
 - **Risk:** The north star and the product wedge; sequenced as early as F-01 allows. Load-bearing guardrail: the run-out estimate must never be wrong-optimistic — days-of-supply must floor (never round up), so a "green/safe" can never overstate the real supply (a false safe is a regression). New medication routes must be added to `PROTECTED_ROUTES` (auth gating) per the project's middleware convention.
-- **Status:** proposed
+- **Status:** ready
 
 ### S-02: Expiry shelf view
 
@@ -117,8 +117,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 | Roadmap ID | Change ID              | Suggested issue title                          | Ready for `/10x-plan` | Notes |
 | ---------- | ---------------------- | ---------------------------------------------- | --------------------- | ----- |
-| F-01       | medication-data-model  | Medication record schema + owner-only RLS      | yes                   | Run `/10x-plan medication-data-model` first — unlocks the north star S-01 |
-| S-01       | runout-forecast        | Add medication + run-out forecast (daily view) | no                    | North star; becomes ready when F-01 lands |
+| F-01       | medication-data-model  | Medication record schema + owner-only RLS      | done                  | Done — archived 2026-06-12 → `context/archive/2026-06-12-medication-data-model/` |
+| S-01       | runout-forecast        | Add medication + run-out forecast (daily view) | yes                   | North star; F-01 done — run `/10x-plan runout-forecast` |
 | S-02       | expiry-shelf           | Expiry shelf view                              | no                    | After S-01; parallel with S-03 |
 | S-03       | medication-management  | Refill, edit, and archive medications          | no                    | After S-01; parallel with S-02 |
 | S-04       | cabinet-summary        | Summary landing (running-low / expiring counts) | no                   | After S-01 + S-02 |

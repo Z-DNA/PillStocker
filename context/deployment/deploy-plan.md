@@ -9,7 +9,7 @@
 - **Platform:** Cloudflare Workers (per `infrastructure.md`; $0 free tier, zero migration, best agent docs).
 - **Public host:** `https://pillstocker.z-dna.dev` — custom domain on the existing Cloudflare zone `z-dna.dev` (subdomain; apex left free for a future landing page). `*.workers.dev` remains a free fallback.
 - **Worker name:** `pillstocker`.
-- **Data layer:** Supabase (external cloud project — Auth-only, no custom tables/migrations).
+- **Data layer:** Supabase (external cloud project) — Auth plus a `medications` table with owner-only RLS (F-01, 2026-06-12); schema is version-controlled under `supabase/migrations/` and applied via `supabase db push`, separately from the Worker deploy.
 - **Background jobs:** none — FR-009 out-of-app notifications + Cron Triggers are **deferred to v2**.
 
 ## Done in-repo (committed config)
@@ -52,5 +52,5 @@
 
 - Apex / marketing page on `z-dna.dev` (only the `pillstocker.` subdomain is wired).
 - FR-009 notifications + Cron Triggers (deferred to v2 — no `[triggers]` here).
-- DB migrations (Auth-only; none).
+- DB schema migrations as part of the Worker deploy — they're applied separately via `supabase db push` (human-gated, forward-only; they do **not** roll back with `wrangler`). The `medications` schema (F-01) is already live.
 - Production-scale concerns (multi-region, HA, alerting beyond `wrangler tail`).
