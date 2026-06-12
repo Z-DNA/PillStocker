@@ -113,7 +113,16 @@ npx supabase stop
 
 The local Studio UI is available at `http://localhost:54323`.
 
-No database tables or migrations are required — this project uses Supabase Auth's built-in `auth.users` table only.
+### Database schema & migrations
+
+The app's domain data lives in a `medications` table (one record per medication; optional pill count + morning/midday/night dosing and/or expiry date), protected by owner-only row-level security. The schema is version-controlled under `supabase/migrations/`.
+
+- **Create a migration:** `npx supabase migration new <name>`
+- **Apply locally:** `npx supabase db reset` (re-applies all migrations to the local stack)
+- **Apply to the cloud project (human-gated):** `npx supabase link --project-ref <ref>` then `npx supabase db push` — forward-only; it does **not** roll back with `wrangler`.
+- **Regenerate TypeScript types after a schema change:** `npm run db:types` (writes `src/lib/database.types.ts`)
+
+Auth still uses Supabase's built-in `auth.users`; medications reference it via `user_id`.
 
 ### Using a cloud Supabase project instead
 

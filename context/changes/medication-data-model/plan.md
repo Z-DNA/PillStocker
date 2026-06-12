@@ -199,26 +199,26 @@ Negligible at this scale (single-user, low QPS, small data). The `user_id` index
 
 #### Automated
 
-- [x] 1.1 Local stack starts: `npx supabase start` reports healthy
-- [x] 1.2 Migration applies cleanly: `npx supabase db reset` runs with no error and lists the new migration
-- [x] 1.3 Schema lints clean: `npx supabase db lint`
+- [x] 1.1 Local stack starts: `npx supabase start` reports healthy — 6f42f15
+- [x] 1.2 Migration applies cleanly: `npx supabase db reset` runs with no error and lists the new migration — 6f42f15
+- [x] 1.3 Schema lints clean: `npx supabase db lint` — 6f42f15
 
 #### Manual
 
-- [x] 1.4 Two-user SQL check: user B cannot select user A's rows; B cannot insert with `user_id = A`
-- [x] 1.5 Constraint behavior: negative pill_count/dose rejected; empty name rejected; `archived_at IS NULL` distinguishes active rows
-- [x] 1.6 Human-gated cloud apply: `npx supabase link` + `npx supabase db push` succeeds; `medications` visible in cloud Studio with RLS enabled
+- [x] 1.4 Two-user SQL check: user B cannot select user A's rows; B cannot insert with `user_id = A` — 6f42f15
+- [x] 1.5 Constraint behavior: negative pill_count/dose rejected; empty name rejected; `archived_at IS NULL` distinguishes active rows — 6f42f15
+- [x] 1.6 Human-gated cloud apply: `npx supabase link` + `npx supabase db push` succeeds; `medications` visible in cloud Studio with RLS enabled — 6f42f15
 
 ### Phase 2: Generated types + typed client + docs
 
 #### Automated
 
-- [ ] 2.1 Types regenerate: `npm run db:types` writes a non-empty `src/lib/database.types.ts` containing `medications`
-- [ ] 2.2 Astro types sync: `npx astro sync` succeeds
-- [ ] 2.3 Build passes with typed client: `npm run build`
-- [ ] 2.4 Lint passes: `npm run lint`
+- [x] 2.1 Types regenerate: `npm run db:types` writes a non-empty `src/lib/database.types.ts` containing `medications`
+- [x] 2.2 Astro types sync: `npx astro sync` succeeds
+- [x] 2.3 Build passes with typed client: `npm run build`
+- [x] 2.4 Lint passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.5 `createClient(...)` returns a typed client — `.from('medications')` autocompletes; a sample typed select compiles
-- [ ] 2.6 README no longer claims "no tables/migrations" and describes the migration + `db:types` workflow
+- [x] 2.5 `createClient(...)` returns a typed client — `.from('medications')` autocompletes; a sample typed select compiles
+- [x] 2.6 README no longer claims "no tables/migrations" and describes the migration + `db:types` workflow
