@@ -27,5 +27,8 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# claude code local (personal-machine) settings
-.claude/settings.local.json
+# claude code (tool-managed skills/prompts/state — re-fetchable via `10x get`)
+.claude/
+
+# project MCP server config (local, not shared)
+.mcp.json
