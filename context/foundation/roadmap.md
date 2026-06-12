@@ -29,7 +29,7 @@ PillStocker helps people on multiple long-term medications see, in one place, wh
 
 | ID    | Change ID              | Outcome (user can …)                                                          | Prerequisites    | PRD refs                                | Status   |
 | ----- | ---------------------- | ----------------------------------------------------------------------------- | ---------------- | --------------------------------------- | -------- |
-| F-01  | medication-data-model  | (foundation) medication record schema with owner-only RLS + soft-delete; typed access | —        | FR-002, FR-005, NFR                     | ready    |
+| F-01  | medication-data-model  | (foundation) medication record schema with owner-only RLS + soft-delete; typed access | —        | FR-002, FR-005, NFR                     | done     |
 | S-01  | runout-forecast        | add a med with dosing and see its predicted run-out date, colour-coded & sorted | F-01           | US-01, FR-001, FR-002, FR-006, FR-007, FR-008 | proposed |
 | S-02  | expiry-shelf           | see meds with expiry dates flagged (expired vs soon) and sorted soonest-first  | F-01, S-01      | US-02, FR-002, FR-010                   | proposed |
 | S-03  | medication-management  | refill, edit, and archive (soft-delete) a medication                           | F-01, S-01      | FR-003, FR-004, FR-005                  | proposed |
@@ -60,7 +60,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Sequenced first because every slice reads/writes this one record; establishing owner-scoped RLS correctly here once is safer than retrofitting confidentiality per-slice on sensitive health data. Kept minimal — table + RLS + types, not a complete data layer; each downstream slice still exercises it through a real user capability. The load-bearing risk is an under-specified schema forcing a mid-build migration, so the FR-002 field set is settled here.
-- **Status:** ready
+- **Status:** done
 
 ## Slices
 
@@ -148,4 +148,4 @@ All four are lifted from the PRD's `## Open Questions`. None blocks an MVP slice
 
 ## Done
 
-(Empty on first generation. `/10x-archive` appends an entry here — and flips that item's `Status` to `done` — when a change whose `Change ID` matches a roadmap item is archived. Do NOT pre-populate.)
+- **F-01: (foundation) medication record schema with owner-only RLS + soft-delete; typed access** — Archived 2026-06-12 → `context/archive/2026-06-12-medication-data-model/`. Lesson: —.

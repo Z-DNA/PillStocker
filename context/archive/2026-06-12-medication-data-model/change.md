@@ -1,10 +1,10 @@
 ---
 change_id: medication-data-model
 title: Medication data model
-status: implemented
+status: archived
 created: 2026-06-12
 updated: 2026-06-12
-archived_at: null
+archived_at: 2026-06-12T13:32:27Z
 ---
 
 ## Notes
