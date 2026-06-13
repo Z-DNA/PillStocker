@@ -268,34 +268,34 @@ None — S-01 adds no schema changes and regenerates no types. It reads/writes t
 
 #### Automated
 
-- [x] 1.1 `npx astro sync` regenerates types without error
-- [x] 1.2 `npm run build` passes
-- [x] 1.3 `npm run lint` passes
+- [x] 1.1 `npx astro sync` regenerates types without error — 19794bd
+- [x] 1.2 `npm run build` passes — 19794bd
+- [x] 1.3 `npm run lint` passes — 19794bd
 
 #### Manual
 
-- [x] 1.4 Review `computeRunout` against the guardrail spec table
-- [x] 1.5 Confirm floor-only (no round/ceil) in `forecast.ts`
+- [x] 1.4 Review `computeRunout` against the guardrail spec table — 19794bd
+- [x] 1.5 Confirm floor-only (no round/ceil) in `forecast.ts` — 19794bd
 
 ### Phase 2: Run-out list view + routing (read path)
 
 #### Automated
 
-- [ ] 2.1 `npx astro sync` passes
-- [ ] 2.2 `npm run build` passes
-- [ ] 2.3 `npm run lint` passes
-- [ ] 2.4 `"/medications"` present in `PROTECTED_ROUTES`
+- [x] 2.1 `npx astro sync` passes
+- [x] 2.2 `npm run build` passes
+- [x] 2.3 `npm run lint` passes
+- [x] 2.4 `"/medications"` present in `PROTECTED_ROUTES`
 
 #### Manual
 
-- [ ] 2.5 Unauthenticated `/medications` redirects to `/auth/signin`
-- [ ] 2.6 Empty state with add CTA when no meds
-- [ ] 2.7 Seeded count+dosing med shows correct colour/date/days-left
-- [ ] 2.8 Seeded 0-pill med shows "Out now", pinned top
-- [ ] 2.9 Seeded name-only med shows "No forecast", sorted last
-- [ ] 2.10 Multiple meds ordered soonest-run-out first
-- [ ] 2.11 `/dashboard` and post-signin land on `/medications`
-- [ ] 2.12 Topbar "Medications" link points to `/medications`
+- [x] 2.5 Unauthenticated `/medications` redirects to `/auth/signin`
+- [x] 2.6 Empty state with add CTA when no meds
+- [x] 2.7 Seeded count+dosing med shows correct colour/date/days-left
+- [x] 2.8 Seeded 0-pill med shows "Out now", pinned top
+- [x] 2.9 Seeded name-only med shows "No forecast", sorted last
+- [x] 2.10 Multiple meds ordered soonest-run-out first
+- [x] 2.11 `/dashboard` and post-signin land on `/medications`
+- [x] 2.12 Topbar "Medications" link points to `/medications`
 
 ### Phase 3: Add-medication flow (write path)
 

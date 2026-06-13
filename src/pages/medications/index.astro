@@ -1,0 +1,69 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Topbar from "@/components/Topbar.astro";
+import Banner from "@/components/Banner.astro";
+import MedicationCard from "@/components/medications/MedicationCard.astro";
+import { createClient } from "@/lib/supabase";
+import { getActiveMedications, type MedicationRow } from "@/lib/medications/queries";
+import { computeRunout, compareByRunout, type RunoutForecast } from "@/lib/medications/forecast";
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+let rows: { med: MedicationRow; forecast: RunoutForecast }[] = [];
+let loadError: string | null = null;
+
+if (!supabase) {
+  loadError = "Supabase is not configured.";
+} else {
+  try {
+    const today = new Date();
+    const meds = await getActiveMedications(supabase);
+    rows = meds
+      .map((med) => ({ med, forecast: computeRunout(med, today) }))
+      .sort((a, b) => compareByRunout(a.forecast, b.forecast));
+  } catch {
+    loadError = "Could not load your medications. Please try again.";
+  }
+}
+---
+
+<Layout title="Medications">
+  <div class="bg-cosmic min-h-screen p-4">
+    {loadError && <Banner variant="error">{loadError}</Banner>}
+    <div class="mx-auto max-w-2xl">
+      <Topbar />
+      <div class="mb-6 flex items-center justify-between">
+        <h1 class="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+          Medications
+        </h1>
+        <a
+          href="/medications/new"
+          class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white transition-colors hover:bg-white/20"
+        >
+          Add medication
+        </a>
+      </div>
+
+      {
+        !loadError && rows.length === 0 ? (
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-white backdrop-blur-xl">
+            <p class="text-lg font-medium">No medications yet</p>
+            <p class="mt-1 text-sm text-blue-100/60">Add your first medication to start forecasting run-out.</p>
+            <a
+              href="/medications/new"
+              class="mt-4 inline-block rounded-lg bg-white/10 px-4 py-2 text-sm text-white transition-colors hover:bg-white/20"
+            >
+              Add your first medication
+            </a>
+          </div>
+        ) : (
+          <div class="space-y-3">
+            {rows.map(({ med, forecast }) => (
+              <MedicationCard med={med} forecast={forecast} />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</Layout>
