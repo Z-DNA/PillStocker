@@ -21,7 +21,8 @@ if (!supabase) {
     rows = meds
       .map((med) => ({ med, forecast: computeRunout(med, today) }))
       .sort((a, b) => compareByRunout(a.forecast, b.forecast));
-  } catch {
+  } catch (error) {
+    console.error("Failed to load medications", error);
     loadError = "Could not load your medications. Please try again.";
   }
 }
