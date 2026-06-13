@@ -28,7 +28,7 @@ PRD refs: US-01, FR-001, FR-002, FR-006, FR-007, FR-008.
 A signed-in user visits `/medications` (the post-login landing) and:
 - with no meds yet, sees an empty state with an "Add your first medication" call-to-action;
 - can open `/medications/new`, fill the add form, submit, and land back on `/medications` with the new med visible;
-- sees each active med as a colour-coded row showing its run-out date and "N days left", ordered soonest-first, with **"Out now"** (0 days / 0 pills) pinned at the very top and **"No forecast"** (no count or no dosing) rows neutral and last.
+- sees each active med as a colour-coded row showing its run-out date and "N days left (N pills)", ordered soonest-first, with **"Out now"** pinned at the very top — shown for zero or unrecorded stock (an explicit `0` count, or a missing count alongside a daily dose) — and **"No forecast"** (no daily dose entered) rows neutral and last.
 
 Verify: `astro sync && npm run build && npm run lint` pass; the three manual scenarios above behave as described against a locally-configured Supabase + auth; the floor guardrail holds (10 pills at 1/1/1 dosing shows exactly **3** days, not 4).
 
@@ -52,10 +52,10 @@ The add flow copies the auth pattern exactly (React island → native POST → s
 
 ## Critical Implementation Details
 
-- **Guardrail invariant (load-bearing).** `daysLeft = Math.floor(pillCount / totalDailyDose)`; `daysLeft <= 0 ⇒ status "out"`. Never `round`/`ceil`. A null `pill_count` **or** a `totalDailyDose <= 0` yields status `"none"` (No forecast) — not a zero-day forecast. Doses that are `null` count as `0` in the sum; a med with one dose set and the others null forecasts from that one dose.
+- **Guardrail invariant (load-bearing).** `daysLeft = Math.floor(pillCount / totalDailyDose)`; `daysLeft <= 0 ⇒ status "out"`. Never `round`/`ceil`. Status rules (revised 2026-06-13): an explicit `pill_count === 0` is always `"out"`; with a daily dose, an unrecorded (`null`) count is treated as `0` stock (→ floors to 0 → `"out"`); only **no daily dose** (alongside a non-zero/unrecorded count) yields `"none"` (No forecast). Doses that are `null` count as `0` in the sum; a med with one dose set and the others null forecasts from that one dose. Treating unknown stock as zero is the most pessimistic reading — never wrong-optimistic.
 - **API route self-guards.** `/api/medications` is under `/api/`, so the `PROTECTED_ROUTES` `startsWith("/medications")` prefix does **not** cover it. The handler must check `locals.user` itself and own its error responses, mirroring `/api/auth/*`.
 - **Insert ownership.** Set `user_id` explicitly from `context.locals.user.id` on insert; RLS `with check` enforces it equals `auth.uid()`.
-- **Empty numeric fields must become `null`, not `0` (parsing trap).** `Number("") === 0` (and `Number(" ") === 0`), so test each numeric field for empty/blank **before** calling `Number()`. If a blank `pill_count` were stored as `0`, a med with dosing but no entered count would forecast `floor(0/dose) = 0` → "Out now" instead of "No forecast" — breaking the count-less edge case (and `computeRunout` correctly keys "none" on `pill_count == null`, so the `null` must survive parsing). A blank dose is "unspecified", not `0`.
+- **Empty numeric fields are stored as `null`, not `0`.** `Number("") === 0` (and `Number(" ") === 0`), so test each numeric field for empty/blank **before** calling `Number()` and store `null` for unspecified count/doses (a blank dose is "unspecified", contributing `0` to the daily total — not a real `0` dose). Forecast interpretation (decided 2026-06-13): a `null` count *alongside a daily dose* is treated as zero stock → "Out now"; "No forecast" is reserved for medications with no daily dose. (This supersedes the earlier plan-review F2 stance that a count-less med should read "No forecast".)
 - **"Today" is computed once, server-side, at date granularity** (UTC). Days-left and run-out date are date-granular; a sub-24h timezone off-by-one is an accepted MVP risk (noted in Open Risks).
 
 ## Phase 1: Forecast logic + data-access helpers
@@ -75,7 +75,7 @@ Build the pure forecast module (the guardrail lives here), the typed query/creat
 **Contract**:
 - `type RunoutStatus = "out" | "critical" | "warning" | "safe" | "none"`
 - `interface RunoutForecast { status: RunoutStatus; daysLeft: number | null; runOutDate: Date | null; totalDailyDose: number }`
-- `computeRunout(med: Pick<MedicationRow, "pill_count" | "dose_morning" | "dose_midday" | "dose_night">, today: Date): RunoutForecast` — `totalDailyDose` = sum of the three doses (null→0); if `pill_count == null || totalDailyDose <= 0` → `status "none"`, `daysLeft`/`runOutDate` null; else `daysLeft = Math.floor(pill_count / totalDailyDose)`, `runOutDate = today + daysLeft days`, status banded: `<= 0 → "out"`, `< 7 → "critical"`, `< 14 → "warning"`, else `"safe"`.
+- `computeRunout(med: Pick<MedicationRow, "pill_count" | "dose_morning" | "dose_midday" | "dose_night">, today: Date): RunoutForecast` — `totalDailyDose` = sum of the three doses (null→0). Rules: `pill_count === 0` → `"out"` (daysLeft 0). Else if `totalDailyDose > 0` → `daysLeft = Math.floor((pill_count ?? 0) / totalDailyDose)` (unrecorded count = 0 stock), `runOutDate = today + daysLeft days`, banded `<= 0 → "out"`, `< 7 → "critical"`, `< 14 → "warning"`, else `"safe"`. Else (no daily dose) → `"none"` (daysLeft/runOutDate null).
 - `compareByRunout(a: RunoutForecast, b: RunoutForecast): number` — forecastable rows (status ≠ `"none"`) ordered by ascending `daysLeft` (so `"out"`/0 sits first); `"none"` rows sort last. `MedicationRow` = `Tables<"medications">` from `@/lib/database.types`.
 
 #### 2. Query + create helpers
@@ -213,12 +213,14 @@ Add the `/medications/new` page, the `AddMedicationForm` React island, and the s
 #### Manual Verification:
 
 - Add a med with count + dosing via the UI → redirected to `/medications`, med appears with the correct colour/date/days-left.
-- Add a name-only med → saved, shows "No forecast".
+- Add a name-only med (no count, no dosing) → saved, shows "No forecast".
 - Add a med with 0 pills → shows "Out now" at the top.
 - Submit a blank name → rejected by client validation; bypassing the client (e.g. direct POST) → server redirects back with an error.
 - Submit a negative number → rejected.
 - Guardrail spot-check through the UI: 10 pills with 1/1/1 dosing shows exactly **3 days left** (critical), never 4.
-- Add a med with dosing but a **blank pill count** → shows "No forecast", not "Out now" (empty-vs-zero parsing).
+- Add a med with dosing but a **blank pill count** → shows "Out now" (unrecorded stock treated as `0`).
+- Forecast rows show the approximate pill count, e.g. "15 days left (30 pills)".
+- Add a med with a count but **no dosing** → shows "No forecast".
 
 **Implementation Note**: After automated verification passes, pause for human confirmation of the add-flow scenarios.
 
@@ -281,36 +283,38 @@ None — S-01 adds no schema changes and regenerates no types. It reads/writes t
 
 #### Automated
 
-- [x] 2.1 `npx astro sync` passes
-- [x] 2.2 `npm run build` passes
-- [x] 2.3 `npm run lint` passes
-- [x] 2.4 `"/medications"` present in `PROTECTED_ROUTES`
+- [x] 2.1 `npx astro sync` passes — 0b2e2fe
+- [x] 2.2 `npm run build` passes — 0b2e2fe
+- [x] 2.3 `npm run lint` passes — 0b2e2fe
+- [x] 2.4 `"/medications"` present in `PROTECTED_ROUTES` — 0b2e2fe
 
 #### Manual
 
-- [x] 2.5 Unauthenticated `/medications` redirects to `/auth/signin`
-- [x] 2.6 Empty state with add CTA when no meds
-- [x] 2.7 Seeded count+dosing med shows correct colour/date/days-left
-- [x] 2.8 Seeded 0-pill med shows "Out now", pinned top
-- [x] 2.9 Seeded name-only med shows "No forecast", sorted last
-- [x] 2.10 Multiple meds ordered soonest-run-out first
-- [x] 2.11 `/dashboard` and post-signin land on `/medications`
-- [x] 2.12 Topbar "Medications" link points to `/medications`
+- [x] 2.5 Unauthenticated `/medications` redirects to `/auth/signin` — 0b2e2fe
+- [x] 2.6 Empty state with add CTA when no meds — 0b2e2fe
+- [x] 2.7 Seeded count+dosing med shows correct colour/date/days-left — 0b2e2fe
+- [x] 2.8 Seeded 0-pill med shows "Out now", pinned top — 0b2e2fe
+- [x] 2.9 Seeded name-only med shows "No forecast", sorted last — 0b2e2fe
+- [x] 2.10 Multiple meds ordered soonest-run-out first — 0b2e2fe
+- [x] 2.11 `/dashboard` and post-signin land on `/medications` — 0b2e2fe
+- [x] 2.12 Topbar "Medications" link points to `/medications` — 0b2e2fe
 
 ### Phase 3: Add-medication flow (write path)
 
 #### Automated
 
-- [ ] 3.1 `npx astro sync` passes
-- [ ] 3.2 `npm run build` passes
-- [ ] 3.3 `npm run lint` passes
+- [x] 3.1 `npx astro sync` passes
+- [x] 3.2 `npm run build` passes
+- [x] 3.3 `npm run lint` passes
 
 #### Manual
 
-- [ ] 3.4 Add med with count+dosing → appears forecasted on the list
-- [ ] 3.5 Name-only add → shows "No forecast"
-- [ ] 3.6 0-pill add → shows "Out now"
-- [ ] 3.7 Blank name rejected (client + server)
-- [ ] 3.8 Negative number rejected
-- [ ] 3.9 Guardrail spot-check: 10 pills @ 1/1/1 → exactly 3 days left
-- [ ] 3.10 Dosing but blank count → "No forecast", not "Out now"
+- [x] 3.4 Add med with count+dosing → appears forecasted on the list
+- [x] 3.5 Name-only add → shows "No forecast"
+- [x] 3.6 0-pill add → shows "Out now"
+- [x] 3.7 Blank name rejected (client + server)
+- [x] 3.8 Negative number rejected
+- [x] 3.9 Guardrail spot-check: 10 pills @ 1/1/1 → exactly 3 days left
+- [x] 3.10 Dosing but blank count → "Out now" (unrecorded stock = 0)
+- [x] 3.11 Forecast rows show pill count, e.g. "15 days left (30 pills)"
+- [x] 3.12 Count but no dosing → "No forecast"

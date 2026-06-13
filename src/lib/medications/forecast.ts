@@ -19,8 +19,13 @@ export interface RunoutForecast {
  * floored (never rounded up), and anything at or below zero is treated as
  * already out — a false "safe" can never overstate the real supply.
  *
- * A missing count or a zero total daily dose yields `"none"` (no forecast),
- * which is distinct from a zero-day forecast.
+ * Status rules:
+ * - An explicit zero pill count is always `"out"` (you have no stock),
+ *   regardless of dosing.
+ * - With a daily dose, the medication is forecastable; an unrecorded count is
+ *   treated as zero stock (a known regimen with nothing logged reads as out).
+ * - With no daily dose entered (and a non-zero / unrecorded count) there is no
+ *   consumption rate to project, so the status is `"none"` (no forecast).
  */
 export function computeRunout(
   med: Pick<MedicationRow, "pill_count" | "dose_morning" | "dose_midday" | "dose_night">,
@@ -28,28 +33,36 @@ export function computeRunout(
 ): RunoutForecast {
   const totalDailyDose = (med.dose_morning ?? 0) + (med.dose_midday ?? 0) + (med.dose_night ?? 0);
 
-  // No count, or nothing consumed per day → nothing to forecast.
-  if (med.pill_count === null || totalDailyDose <= 0) {
-    return { status: "none", daysLeft: null, runOutDate: null, totalDailyDose };
+  // Explicit zero stock is always "out", whether or not a dose is recorded.
+  if (med.pill_count === 0) {
+    return { status: "out", daysLeft: 0, runOutDate: new Date(today), totalDailyDose };
   }
 
-  const daysLeft = Math.floor(med.pill_count / totalDailyDose);
+  // A daily dose makes the medication forecastable; an unrecorded count counts
+  // as zero stock (→ floors to 0 days → "out").
+  if (totalDailyDose > 0) {
+    const pillCount = med.pill_count ?? 0;
+    const daysLeft = Math.floor(pillCount / totalDailyDose);
 
-  const runOutDate = new Date(today);
-  runOutDate.setDate(runOutDate.getDate() + daysLeft);
+    const runOutDate = new Date(today);
+    runOutDate.setDate(runOutDate.getDate() + daysLeft);
 
-  let status: RunoutStatus;
-  if (daysLeft <= 0) {
-    status = "out";
-  } else if (daysLeft < 7) {
-    status = "critical";
-  } else if (daysLeft < 14) {
-    status = "warning";
-  } else {
-    status = "safe";
+    let status: RunoutStatus;
+    if (daysLeft <= 0) {
+      status = "out";
+    } else if (daysLeft < 7) {
+      status = "critical";
+    } else if (daysLeft < 14) {
+      status = "warning";
+    } else {
+      status = "safe";
+    }
+
+    return { status, daysLeft, runOutDate, totalDailyDose };
   }
 
-  return { status, daysLeft, runOutDate, totalDailyDose };
+  // No daily dose → no consumption rate to forecast.
+  return { status: "none", daysLeft: null, runOutDate: null, totalDailyDose };
 }
 
 /**
