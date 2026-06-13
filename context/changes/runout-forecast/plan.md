@@ -303,18 +303,18 @@ None — S-01 adds no schema changes and regenerates no types. It reads/writes t
 
 #### Automated
 
-- [x] 3.1 `npx astro sync` passes
-- [x] 3.2 `npm run build` passes
-- [x] 3.3 `npm run lint` passes
+- [x] 3.1 `npx astro sync` passes — 22709bf
+- [x] 3.2 `npm run build` passes — 22709bf
+- [x] 3.3 `npm run lint` passes — 22709bf
 
 #### Manual
 
-- [x] 3.4 Add med with count+dosing → appears forecasted on the list
-- [x] 3.5 Name-only add → shows "No forecast"
-- [x] 3.6 0-pill add → shows "Out now"
-- [x] 3.7 Blank name rejected (client + server)
-- [x] 3.8 Negative number rejected
-- [x] 3.9 Guardrail spot-check: 10 pills @ 1/1/1 → exactly 3 days left
-- [x] 3.10 Dosing but blank count → "Out now" (unrecorded stock = 0)
-- [x] 3.11 Forecast rows show pill count, e.g. "15 days left (30 pills)"
-- [x] 3.12 Count but no dosing → "No forecast"
+- [x] 3.4 Add med with count+dosing → appears forecasted on the list — 22709bf
+- [x] 3.5 Name-only add → shows "No forecast" — 22709bf
+- [x] 3.6 0-pill add → shows "Out now" — 22709bf
+- [x] 3.7 Blank name rejected (client + server) — 22709bf
+- [x] 3.8 Negative number rejected — 22709bf
+- [x] 3.9 Guardrail spot-check: 10 pills @ 1/1/1 → exactly 3 days left — 22709bf
+- [x] 3.10 Dosing but blank count → "Out now" (unrecorded stock = 0) — 22709bf
+- [x] 3.11 Forecast rows show pill count, e.g. "15 days left (30 pills)" — 22709bf
+- [x] 3.12 Count but no dosing → "No forecast" — 22709bf
