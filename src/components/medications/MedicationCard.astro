@@ -1,0 +1,86 @@
+---
+import type { RunoutForecast, RunoutStatus } from "@/lib/medications/forecast";
+import type { MedicationRow } from "@/lib/medications/queries";
+
+interface Props {
+  med: MedicationRow;
+  forecast: RunoutForecast;
+}
+
+const { med, forecast } = Astro.props;
+
+const presentation: Record<
+  RunoutStatus,
+  { label: string; badge: string; border: string; tint: string; accent: string }
+> = {
+  out: {
+    label: "Out now",
+    badge: "bg-red-800 text-white ring-2 ring-red-500/50",
+    border: "border-red-500/70",
+    tint: "bg-red-500/15",
+    accent: "text-red-300",
+  },
+  critical: {
+    label: "Critical",
+    badge: "bg-red-500 text-white",
+    border: "border-red-500/60",
+    tint: "bg-red-500/10",
+    accent: "text-red-300",
+  },
+  warning: {
+    label: "Low",
+    badge: "bg-amber-400 text-amber-950",
+    border: "border-amber-400/60",
+    tint: "bg-amber-400/10",
+    accent: "text-amber-200",
+  },
+  safe: {
+    label: "OK",
+    badge: "bg-emerald-500 text-white",
+    border: "border-emerald-500/60",
+    tint: "bg-emerald-500/10",
+    accent: "text-emerald-200",
+  },
+  none: {
+    label: "No forecast",
+    badge: "bg-slate-500/70 text-slate-100",
+    border: "border-white/10",
+    tint: "bg-white/5",
+    accent: "text-white/50",
+  },
+};
+
+const p = presentation[forecast.status];
+
+const runOutDateLabel =
+  forecast.runOutDate?.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) ?? null;
+---
+
+<div class:list={["rounded-2xl border p-5 text-white backdrop-blur-xl", p.border, p.tint]}>
+  <div class="flex items-start justify-between gap-4">
+    <div class="min-w-0">
+      <h2 class="truncate text-lg font-semibold">{med.name}</h2>
+      {med.active_substance && <p class="truncate text-sm text-blue-100/60">{med.active_substance}</p>}
+      {med.description && <p class="mt-1 truncate text-sm text-blue-100/40">{med.description}</p>}
+    </div>
+    <span class:list={["shrink-0 rounded-full px-3 py-1 text-xs font-medium", p.badge]}>{p.label}</span>
+  </div>
+
+  <div class="mt-4 flex flex-wrap items-baseline justify-between gap-2 text-sm">
+    {
+      forecast.status === "none" ? (
+        <span class="text-white/50">Add a pill count and dosing to forecast run-out</span>
+      ) : forecast.status === "out" ? (
+        <span class="font-semibold text-red-200">Out of supply</span>
+      ) : (
+        <>
+          <span>
+            <span class:list={["text-2xl font-bold", p.accent]}>{forecast.daysLeft}</span>
+            <span class="text-blue-100/70"> days left</span>
+          </span>
+          {runOutDateLabel && <span class="text-blue-100/60">Runs out {runOutDateLabel}</span>}
+        </>
+      )
+    }
+  </div>
+</div>
