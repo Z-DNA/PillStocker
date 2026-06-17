@@ -1,0 +1,77 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Topbar from "@/components/Topbar.astro";
+import Banner from "@/components/Banner.astro";
+import ExpiryCard from "@/components/medications/ExpiryCard.astro";
+import { createClient } from "@/lib/supabase";
+import { getActiveMedications, type MedicationRow } from "@/lib/medications/queries";
+import { classifyExpiry, compareByExpiry, type ExpiryClassification } from "@/lib/medications/expiry";
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+let rows: { med: MedicationRow; expiry: ExpiryClassification }[] = [];
+let loadError: string | null = null;
+
+if (!supabase) {
+  loadError = "Supabase is not configured.";
+} else {
+  try {
+    const today = new Date();
+    const meds = await getActiveMedications(supabase);
+    rows = meds
+      .filter((med): med is MedicationRow & { expiry_date: string } => med.expiry_date !== null)
+      .map((med) => {
+        // Construct from local date parts so a "YYYY-MM-DD" date column value
+        // is not shifted a day by UTC parsing of new Date(string).
+        const [year, month, day] = med.expiry_date.split("-").map(Number);
+        const expiryDate = new Date(year, month - 1, day);
+        return { med, expiry: classifyExpiry(expiryDate, today) };
+      })
+      .sort((a, b) => compareByExpiry(a.expiry, b.expiry));
+  } catch (error) {
+    console.error("Failed to load medications", error);
+    loadError = "Could not load your medications. Please try again.";
+  }
+}
+---
+
+<Layout title="Shelf">
+  <div class="bg-cosmic min-h-screen p-4">
+    {loadError && <Banner variant="error">{loadError}</Banner>}
+    <div class="mx-auto max-w-2xl">
+      <Topbar />
+      <div class="mb-6 flex items-center justify-between">
+        <h1 class="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+          Shelf
+        </h1>
+        <a
+          href="/medications/new?from=shelf"
+          class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white transition-colors hover:bg-white/20"
+        >
+          Add medication
+        </a>
+      </div>
+
+      {
+        !loadError && rows.length === 0 ? (
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-white backdrop-blur-xl">
+            <p class="text-lg font-medium">No medications with an expiry date yet</p>
+            <p class="mt-1 text-sm text-blue-100/60">Add an expiry date when you add a medication to track it here.</p>
+            <a
+              href="/medications/new"
+              class="mt-4 inline-block rounded-lg bg-white/10 px-4 py-2 text-sm text-white transition-colors hover:bg-white/20"
+            >
+              Add a medication
+            </a>
+          </div>
+        ) : (
+          <div class="space-y-3">
+            {rows.map(({ med, expiry }) => (
+              <ExpiryCard med={med} expiry={expiry} />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</Layout>
