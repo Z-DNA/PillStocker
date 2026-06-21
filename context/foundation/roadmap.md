@@ -31,7 +31,7 @@ PillStocker helps people on multiple long-term medications see, in one place, wh
 | ----- | ---------------------- | ----------------------------------------------------------------------------- | ---------------- | --------------------------------------- | -------- |
 | F-01  | medication-data-model  | (foundation) medication record schema with owner-only RLS + soft-delete; typed access | —        | FR-002, FR-005, NFR                     | done     |
 | S-01  | runout-forecast        | add a med with dosing and see its predicted run-out date, colour-coded & sorted | F-01           | US-01, FR-001, FR-002, FR-006, FR-007, FR-008 | done     |
-| S-02  | expiry-shelf           | see meds with expiry dates flagged (expired vs soon) and sorted soonest-first  | F-01, S-01      | US-02, FR-002, FR-010                   | proposed |
+| S-02  | expiry-shelf           | see meds with expiry dates flagged (expired vs soon) and sorted soonest-first  | F-01, S-01      | US-02, FR-002, FR-010                   | done     |
 | S-03  | medication-management  | refill, edit, and archive (soft-delete) a medication                           | F-01, S-01      | FR-003, FR-004, FR-005                  | proposed |
 | S-04  | cabinet-summary        | see a landing screen counting meds running low and expiring soon               | F-01, S-01, S-02 | FR-011                                  | proposed |
 
@@ -87,7 +87,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Depends on S-01 for the shared add-medication flow (extended here with the optional expiry field) and the medication-list shell. Guardrail: expiry status must never show more time remaining than the date allows. Lower domain-logic risk than S-01 (date comparison, no dosing math). The adoption risk that manual expiry entry gets skipped is accepted per FR-010 — the value is the whole-cabinet view a package can't provide.
-- **Status:** proposed
+- **Status:** done
 
 ### S-03: Medication management (refill, edit, archive)
 
@@ -157,3 +157,4 @@ All four are lifted from the PRD's `## Open Questions`. None blocks an MVP slice
 
 - **F-01: (foundation) medication record schema with owner-only RLS + soft-delete; typed access** — Archived 2026-06-12 → `context/archive/2026-06-12-medication-data-model/`. Lesson: —.
 - **S-01: user adds a medication with a pill count and morning/midday/night dosing, then sees its predicted run-out date, colour-coded by proximity (green ≥14 days / yellow 7–14 / red <7) and ordered soonest-run-out first.** — Archived 2026-06-14 → `context/archive/2026-06-12-runout-forecast/`. Lesson: —.
+- **S-02: user records an expiry date on a medication and sees a shelf view that flags expired vs soon-to-expire items, colour-coded and ordered soonest-expiry first.** — Archived 2026-06-21 → `context/archive/2026-06-14-expiry-shelf/`. Lesson: —.
