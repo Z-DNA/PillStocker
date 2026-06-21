@@ -1,9 +1,9 @@
 ---
 change_id: expiry-shelf
 title: Expiry shelf
-status: implementing
+status: implemented
 created: 2026-06-14
-updated: 2026-06-17
+updated: 2026-06-21
 archived_at: null
 ---
 
