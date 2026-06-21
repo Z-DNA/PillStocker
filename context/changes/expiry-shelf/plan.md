@@ -259,16 +259,16 @@ None — S-02 adds no schema changes and regenerates no types. It reads/writes t
 
 #### Automated
 
-- [x] 2.1 `npx astro sync` passes
-- [x] 2.2 `npm run build` passes
-- [x] 2.3 `npm run lint` passes
+- [x] 2.1 `npx astro sync` passes — 4b5b779
+- [x] 2.2 `npm run build` passes — 4b5b779
+- [x] 2.3 `npm run lint` passes — 4b5b779
 
 #### Manual
 
-- [x] 2.4 Add med with expiry date → appears on the shelf with correct band/date/phrase
-- [x] 2.5 Expiry ~30–90 days out → "Soon" (amber)
-- [x] 2.6 Past expiry date → "Expired" (red), pinned top
-- [x] 2.7 No expiry date → absent from shelf, present on run-out view
-- [x] 2.8 Existing add flow unaffected (count/dosing save; blank name + negatives rejected)
-- [x] 2.9 Add launched from shelf returns to /medications/shelf after save
-- [x] 2.10 Add from run-out view / direct /medications/new returns to /medications after save
+- [x] 2.4 Add med with expiry date → appears on the shelf with correct band/date/phrase — 4b5b779
+- [x] 2.5 Expiry ~30–90 days out → "Soon" (amber) — 4b5b779
+- [x] 2.6 Past expiry date → "Expired" (red), pinned top — 4b5b779
+- [x] 2.7 No expiry date → absent from shelf, present on run-out view — 4b5b779
+- [x] 2.8 Existing add flow unaffected (count/dosing save; blank name + negatives rejected) — 4b5b779
+- [x] 2.9 Add launched from shelf returns to /medications/shelf after save — 4b5b779
+- [x] 2.10 Add from run-out view / direct /medications/new returns to /medications after save — 4b5b779
