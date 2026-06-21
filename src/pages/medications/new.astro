@@ -3,6 +3,9 @@ import Layout from "@/layouts/Layout.astro";
 import AddMedicationForm from "@/components/medications/AddMedicationForm";
 
 const error = Astro.url.searchParams.get("error");
+const from = Astro.url.searchParams.get("from");
+const backHref = from === "shelf" ? "/medications/shelf" : "/medications";
+const backLabel = from === "shelf" ? "Back to shelf" : "Back to medications";
 ---
 
 <Layout title="Add medication">
@@ -13,9 +16,9 @@ const error = Astro.url.searchParams.get("error");
       >
         Add medication
       </h1>
-      <AddMedicationForm serverError={error} client:load />
+      <AddMedicationForm serverError={error} from={from} client:load />
       <p class="mt-4 text-center text-sm text-blue-100/60">
-        <a href="/medications" class="text-purple-300 hover:underline">Back to medications</a>
+        <a href={backHref} class="text-purple-300 hover:underline">{backLabel}</a>
       </p>
     </div>
   </div>

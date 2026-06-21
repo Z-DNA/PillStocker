@@ -11,6 +11,7 @@ export interface NewMedicationInput {
   dose_morning: number | null;
   dose_midday: number | null;
   dose_night: number | null;
+  expiry_date: string | null;
 }
 
 /**

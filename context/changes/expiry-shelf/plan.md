@@ -240,35 +240,35 @@ None — S-02 adds no schema changes and regenerates no types. It reads/writes t
 
 #### Automated
 
-- [x] 1.1 `npx astro sync` regenerates types without error
-- [x] 1.2 `npm run build` passes
-- [x] 1.3 `npm run lint` passes
+- [x] 1.1 `npx astro sync` regenerates types without error — 8590123
+- [x] 1.2 `npm run build` passes — 8590123
+- [x] 1.3 `npm run lint` passes — 8590123
 
 #### Manual
 
-- [x] 1.4 Review `classifyExpiry` against the band spec table
-- [x] 1.5 Confirm date-granular `daysUntil` with no round-up (guardrail)
-- [x] 1.6 Seeded ~30-day med shows amber "Soon" with relative phrase
-- [x] 1.7 Seeded already-expired med shows red "Expired", pinned top
-- [x] 1.8 Seeded >90-day med shows green "OK"
-- [x] 1.9 Multiple dated meds ordered soonest-expiry first
-- [x] 1.10 Med with no `expiry_date` is absent from the shelf
-- [x] 1.11 Empty state shows when no dated meds; Topbar "Shelf" link works; run-out view unchanged
+- [x] 1.4 Review `classifyExpiry` against the band spec table — 8590123
+- [x] 1.5 Confirm date-granular `daysUntil` with no round-up (guardrail) — 8590123
+- [x] 1.6 Seeded ~30-day med shows amber "Soon" with relative phrase — 8590123
+- [x] 1.7 Seeded already-expired med shows red "Expired", pinned top — 8590123
+- [x] 1.8 Seeded >90-day med shows green "OK" — 8590123
+- [x] 1.9 Multiple dated meds ordered soonest-expiry first — 8590123
+- [x] 1.10 Med with no `expiry_date` is absent from the shelf — 8590123
+- [x] 1.11 Empty state shows when no dated meds; Topbar "Shelf" link works; run-out view unchanged — 8590123
 
 ### Phase 2: Add-path expiry field (write path)
 
 #### Automated
 
-- [ ] 2.1 `npx astro sync` passes
-- [ ] 2.2 `npm run build` passes
-- [ ] 2.3 `npm run lint` passes
+- [x] 2.1 `npx astro sync` passes
+- [x] 2.2 `npm run build` passes
+- [x] 2.3 `npm run lint` passes
 
 #### Manual
 
-- [ ] 2.4 Add med with expiry date → appears on the shelf with correct band/date/phrase
-- [ ] 2.5 Expiry ~30–90 days out → "Soon" (amber)
-- [ ] 2.6 Past expiry date → "Expired" (red), pinned top
-- [ ] 2.7 No expiry date → absent from shelf, present on run-out view
-- [ ] 2.8 Existing add flow unaffected (count/dosing save; blank name + negatives rejected)
-- [ ] 2.9 Add launched from shelf returns to /medications/shelf after save
-- [ ] 2.10 Add from run-out view / direct /medications/new returns to /medications after save
+- [x] 2.4 Add med with expiry date → appears on the shelf with correct band/date/phrase
+- [x] 2.5 Expiry ~30–90 days out → "Soon" (amber)
+- [x] 2.6 Past expiry date → "Expired" (red), pinned top
+- [x] 2.7 No expiry date → absent from shelf, present on run-out view
+- [x] 2.8 Existing add flow unaffected (count/dosing save; blank name + negatives rejected)
+- [x] 2.9 Add launched from shelf returns to /medications/shelf after save
+- [x] 2.10 Add from run-out view / direct /medications/new returns to /medications after save

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Pill, Hash, Sunrise, Sun, Moon, FlaskConical, FileText, Plus } from "lucide-react";
+import { Pill, Hash, Sunrise, Sun, Moon, FlaskConical, FileText, CalendarClock, Plus } from "lucide-react";
 import { FormField } from "@/components/auth/FormField";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { ServerError } from "@/components/auth/ServerError";
 
 interface Props {
   serverError?: string | null;
+  from?: string | null;
 }
 
 interface Values {
@@ -14,6 +15,7 @@ interface Values {
   dose_morning: string;
   dose_midday: string;
   dose_night: string;
+  expiry_date: string;
   active_substance: string;
   description: string;
 }
@@ -24,13 +26,14 @@ const EMPTY: Values = {
   dose_morning: "",
   dose_midday: "",
   dose_night: "",
+  expiry_date: "",
   active_substance: "",
   description: "",
 };
 
 const NUMERIC_FIELDS = ["pill_count", "dose_morning", "dose_midday", "dose_night"] as const;
 
-export default function AddMedicationForm({ serverError }: Props) {
+export default function AddMedicationForm({ serverError, from }: Props) {
   const [values, setValues] = useState<Values>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof Values, string>>>({});
 
@@ -68,6 +71,8 @@ export default function AddMedicationForm({ serverError }: Props) {
 
   return (
     <form method="POST" action="/api/medications" className="space-y-4" onSubmit={handleSubmit} noValidate>
+      <input type="hidden" name="from" value={from ?? ""} />
+
       <FormField
         id="name"
         label="Name"
@@ -135,6 +140,18 @@ export default function AddMedicationForm({ serverError }: Props) {
           />
         </div>
       </div>
+
+      <FormField
+        id="expiry_date"
+        type="date"
+        label="Expiry date"
+        value={values.expiry_date}
+        onChange={(v) => {
+          setField("expiry_date", v);
+        }}
+        icon={<CalendarClock className="size-4" />}
+        hint={<p className="mt-1 text-xs text-blue-100/40">Leave blank to skip expiry tracking for this medication.</p>}
+      />
 
       <FormField
         id="active_substance"
