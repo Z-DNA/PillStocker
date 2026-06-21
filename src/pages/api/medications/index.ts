@@ -26,14 +26,15 @@ function optionalText(raw: FormDataEntryValue | null): string | null {
   return trimmed === "" ? null : trimmed;
 }
 
-// Empty/blank → null. A non-empty value that doesn't parse as a date is
-// rejected (defense-in-depth behind the native date input).
+// Empty/blank → null. A non-empty value must be a real ISO date in the exact
+// YYYY-MM-DD shape the shelf view parses (and the native date input emits);
+// anything else is rejected (defense-in-depth against crafted POSTs).
 function optionalDate(raw: FormDataEntryValue | null): { value: string | null; invalid: boolean } {
   const trimmed = asString(raw).trim();
   if (trimmed === "") {
     return { value: null, invalid: false };
   }
-  if (Number.isNaN(Date.parse(trimmed))) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(trimmed) || Number.isNaN(Date.parse(trimmed))) {
     return { value: null, invalid: true };
   }
   return { value: trimmed, invalid: false };
