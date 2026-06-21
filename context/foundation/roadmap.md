@@ -3,7 +3,7 @@ project: PillStocker
 version: 1
 status: draft
 created: 2026-06-12
-updated: 2026-06-14
+updated: 2026-06-21
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -145,6 +145,13 @@ All four are lifted from the PRD's `## Open Questions`. None blocks an MVP slice
 - **No pharmacy integration or automatic reordering** — Why parked: PRD §Non-Goals; the app warns, the user acts.
 - **No non-daily dosing schedules in v1** — Why parked: PRD §Non-Goals (see Open Roadmap Question 1).
 - **No native mobile app in v1** — Why parked: PRD §Non-Goals; PillStocker ships as a web app.
+
+### Post-MVP enhancements (surfaced during S-02)
+
+- **"Hide no-forecast" filter on the run-out view** — Why parked: post-MVP UX nicety; a toggle to hide `status: "none"` meds (no daily dose) so the daily view shows only forecastable rows. MVP keeps all active meds visible with no-forecast rows sorted last.
+- **More descriptive names for the run-out & shelf views** — Why parked: post-MVP polish; the "Medications" (daily/run-out) and "Shelf" (expiry) labels are functional but ambiguous. Needs chosen replacement labels; deferred until the two views settle in use.
+- **Medication type/category field (e.g. cardio, psychiatric)** — Why parked: post-MVP enhancement; a category attribute on the medication record for grouping/filtering across views. Adds a schema column + add-form field + view affordance; outside the settled MVP FR set.
+- **"Add medication" as a modal/overlay** — Why parked: post-MVP UX; replace the dedicated `/medications/new` page with an in-place modal. MVP uses a separate page (mirrors the auth-form pattern); modal is polish.
 
 ## Done
 
