@@ -330,31 +330,31 @@ F-01 `medications` rows through `getActiveMedications`.
 
 #### Automated
 
-- [x] 1.1 `npx astro sync` regenerates types without error
-- [x] 1.2 `npm run build` passes
-- [x] 1.3 `npm run lint` passes
+- [x] 1.1 `npx astro sync` regenerates types without error — bb2dfa3
+- [x] 1.2 `npm run build` passes — bb2dfa3
+- [x] 1.3 `npm run lint` passes — bb2dfa3
 
 #### Manual
 
-- [x] 1.4 Review `summarizeCabinet` membership rules + date parsing
-- [x] 1.5 Seeded: ~10-day med counted "running low"; safe/no-forecast meds not counted
-- [x] 1.6 Seeded: ~30-day + already-expired meds both counted in "expiring soon / expired"
-- [x] 1.7 Count cards link to `/medications` and `/medications/shelf`
-- [x] 1.8 All-clear message shows when meds exist but both counts are 0
-- [x] 1.9 "Add your first medication" CTA shows on an empty account
-- [x] 1.10 Query error renders the error banner (not silent zeros)
-- [x] 1.11 Unauthenticated `/dashboard` redirects to `/auth/signin`
+- [x] 1.4 Review `summarizeCabinet` membership rules + date parsing — bb2dfa3
+- [x] 1.5 Seeded: ~10-day med counted "running low"; safe/no-forecast meds not counted — bb2dfa3
+- [x] 1.6 Seeded: ~30-day + already-expired meds both counted in "expiring soon / expired" — bb2dfa3
+- [x] 1.7 Count cards link to `/medications` and `/medications/shelf` — bb2dfa3
+- [x] 1.8 All-clear message shows when meds exist but both counts are 0 — bb2dfa3
+- [x] 1.9 "Add your first medication" CTA shows on an empty account — bb2dfa3
+- [x] 1.10 Query error renders the error banner (not silent zeros) — bb2dfa3
+- [x] 1.11 Unauthenticated `/dashboard` redirects to `/auth/signin` — bb2dfa3
 
 ### Phase 2: Make it the landing + nav
 
 #### Automated
 
-- [ ] 2.1 `npx astro sync` passes
-- [ ] 2.2 `npm run build` passes
-- [ ] 2.3 `npm run lint` passes
+- [x] 2.1 `npx astro sync` passes
+- [x] 2.2 `npm run build` passes
+- [x] 2.3 `npm run lint` passes
 
 #### Manual
 
-- [ ] 2.4 Sign in lands on `/dashboard` (the summary)
-- [ ] 2.5 Topbar "Summary" link appears on all authenticated views and navigates to `/dashboard`
-- [ ] 2.6 Run-out list and shelf unchanged; their nav links still work
+- [x] 2.4 Sign in lands on `/dashboard` (the summary)
+- [x] 2.5 Topbar "Summary" link appears on all authenticated views and navigates to `/dashboard`
+- [x] 2.6 Run-out list and shelf unchanged; their nav links still work
