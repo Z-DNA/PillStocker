@@ -1,0 +1,38 @@
+import type { APIRoute } from "astro";
+import { createClient } from "@/lib/supabase";
+import { archiveMedication } from "@/lib/medications/queries";
+
+// Redirect back to the manage page, preserving the error message.
+function backToEdit(id: string, message: string): string {
+  const params = new URLSearchParams({ error: message });
+  return `/medications/${id}/edit?${params.toString()}`;
+}
+
+export const POST: APIRoute = async (context) => {
+  const supabase = createClient(context.request.headers, context.cookies);
+  if (!supabase) {
+    return context.redirect("/medications");
+  }
+
+  const user = context.locals.user;
+  if (!user) {
+    return context.redirect("/auth/signin");
+  }
+
+  const id = context.params.id;
+  if (!id) {
+    return context.redirect("/medications");
+  }
+
+  // Soft-delete only. archiveMedication filters `archived_at IS NULL`, so a
+  // second archive (or a not-owned id) matches 0 rows → notFound. Never deletes.
+  const { error, notFound } = await archiveMedication(supabase, id);
+  if (notFound) {
+    return context.redirect(backToEdit(id, "Medication not found"));
+  }
+  if (error) {
+    return context.redirect(backToEdit(id, error.message));
+  }
+
+  return context.redirect("/medications");
+};
