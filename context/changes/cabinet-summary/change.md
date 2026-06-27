@@ -1,7 +1,7 @@
 ---
 change_id: cabinet-summary
 title: Cabinet summary
-status: planned
+status: implementing
 created: 2026-06-27
 updated: 2026-06-27
 ---
