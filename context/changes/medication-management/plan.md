@@ -525,37 +525,37 @@ archive) through the existing UPDATE RLS policy.
 
 #### Automated
 
-- [x] 2.1 `npx astro sync` passes
-- [x] 2.2 `npm run build` passes
-- [x] 2.3 `npm run lint` passes
-- [x] 2.4 Add flow compiles against the renamed `MedicationForm`
+- [x] 2.1 `npx astro sync` passes — ebe16a2
+- [x] 2.2 `npm run build` passes — ebe16a2
+- [x] 2.3 `npm run lint` passes — ebe16a2
+- [x] 2.4 Add flow compiles against the renamed `MedicationForm` — ebe16a2
 
 #### Manual
 
-- [x] 2.5 "Edit" from the run-out list pre-fills the form with current values
-- [x] 2.6 "Edit" from the shelf pre-fills (incl. expiry)
-- [x] 2.7 Editing name + absolute count + dose saves and re-forecasts on the list
-- [x] 2.8 Editing the expiry date updates the shelf band/date
-- [x] 2.9 Setting the count to 0 via edit shows "Out now"
-- [x] 2.10 Blank name (direct POST) rejected back to the manage page with an error
-- [x] 2.11 Negative count rejected with an error
-- [x] 2.12 Nonexistent / not-owned id at `/edit` redirects to `/medications`
-- [x] 2.13 Add flow unaffected (still adds, still returns to the right view)
+- [x] 2.5 "Edit" from the run-out list pre-fills the form with current values — ebe16a2
+- [x] 2.6 "Edit" from the shelf pre-fills (incl. expiry) — ebe16a2
+- [x] 2.7 Editing name + absolute count + dose saves and re-forecasts on the list — ebe16a2
+- [x] 2.8 Editing the expiry date updates the shelf band/date — ebe16a2
+- [x] 2.9 Setting the count to 0 via edit shows "Out now" — ebe16a2
+- [x] 2.10 Blank name (direct POST) rejected back to the manage page with an error — ebe16a2
+- [x] 2.11 Negative count rejected with an error — ebe16a2
+- [x] 2.12 Nonexistent / not-owned id at `/edit` redirects to `/medications` — ebe16a2
+- [x] 2.13 Add flow unaffected (still adds, still returns to the right view) — ebe16a2
 
 ### Phase 3: Refill + archive (remaining write paths)
 
 #### Automated
 
-- [ ] 3.1 `npx astro sync` passes
-- [ ] 3.2 `npm run build` passes
-- [ ] 3.3 `npm run lint` passes
+- [x] 3.1 `npx astro sync` passes
+- [x] 3.2 `npm run build` passes
+- [x] 3.3 `npm run lint` passes
 
 #### Manual
 
-- [ ] 3.4 Refill +30 on a 5-pill med → shows 35 and a re-computed run-out
-- [ ] 3.5 Refill a null-count med → count becomes exactly the refill amount
-- [ ] 3.6 Refill of 0 / negative / blank rejected; count unchanged
-- [ ] 3.7 Archive cancel → no change; confirm → gone from list AND shelf
-- [ ] 3.8 Archived row persists in Studio with `archived_at` set (no hard delete)
-- [ ] 3.9 Refill/archive of a not-owned/nonexistent id fails cleanly, no cross-user mutation
-- [ ] 3.10 Re-archiving an already-archived med is a not-found no-op
+- [x] 3.4 Refill +30 on a 5-pill med → shows 35 and a re-computed run-out
+- [x] 3.5 Refill a null-count med → count becomes exactly the refill amount
+- [x] 3.6 Refill of 0 / negative / blank rejected; count unchanged
+- [x] 3.7 Archive cancel → no change; confirm → gone from list AND shelf
+- [x] 3.8 Archived row persists in Studio with `archived_at` set (no hard delete)
+- [x] 3.9 Refill/archive of a not-owned/nonexistent id fails cleanly, no cross-user mutation
+- [x] 3.10 Re-archiving an already-archived med is a not-found no-op
