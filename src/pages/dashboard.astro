@@ -56,6 +56,7 @@ if (!supabase) {
               <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <a
                   href="/medications"
+                  aria-label={`${summary.runningLow} medication${summary.runningLow === 1 ? "" : "s"} running low`}
                   class="block rounded-2xl border border-white/10 bg-white/5 p-6 text-white backdrop-blur-xl transition-colors hover:bg-white/10"
                 >
                   <span class="block text-4xl font-bold">{summary.runningLow}</span>
@@ -63,6 +64,7 @@ if (!supabase) {
                 </a>
                 <a
                   href="/medications/shelf"
+                  aria-label={`${summary.expiringSoon} medication${summary.expiringSoon === 1 ? "" : "s"} expiring soon or expired`}
                   class="block rounded-2xl border border-white/10 bg-white/5 p-6 text-white backdrop-blur-xl transition-colors hover:bg-white/10"
                 >
                   <span class="block text-4xl font-bold">{summary.expiringSoon}</span>
