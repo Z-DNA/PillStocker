@@ -349,12 +349,12 @@ F-01 `medications` rows through `getActiveMedications`.
 
 #### Automated
 
-- [x] 2.1 `npx astro sync` passes
-- [x] 2.2 `npm run build` passes
-- [x] 2.3 `npm run lint` passes
+- [x] 2.1 `npx astro sync` passes — 9a8f788
+- [x] 2.2 `npm run build` passes — 9a8f788
+- [x] 2.3 `npm run lint` passes — 9a8f788
 
 #### Manual
 
-- [x] 2.4 Sign in lands on `/dashboard` (the summary)
-- [x] 2.5 Topbar "Summary" link appears on all authenticated views and navigates to `/dashboard`
-- [x] 2.6 Run-out list and shelf unchanged; their nav links still work
+- [x] 2.4 Sign in lands on `/dashboard` (the summary) — 9a8f788
+- [x] 2.5 Topbar "Summary" link appears on all authenticated views and navigates to `/dashboard` — 9a8f788
+- [x] 2.6 Run-out list and shelf unchanged; their nav links still work — 9a8f788
