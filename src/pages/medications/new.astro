@@ -1,6 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import AddMedicationForm from "@/components/medications/AddMedicationForm";
+import MedicationForm from "@/components/medications/MedicationForm";
 
 const error = Astro.url.searchParams.get("error");
 const from = Astro.url.searchParams.get("from");
@@ -16,7 +16,7 @@ const backLabel = from === "shelf" ? "Back to shelf" : "Back to medications";
       >
         Add medication
       </h1>
-      <AddMedicationForm serverError={error} from={from} client:load />
+      <MedicationForm serverError={error} from={from} client:load />
       <p class="mt-4 text-center text-sm text-blue-100/60">
         <a href={backHref} class="text-purple-300 hover:underline">{backLabel}</a>
       </p>

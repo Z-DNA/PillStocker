@@ -7,6 +7,10 @@ import { ServerError } from "@/components/auth/ServerError";
 interface Props {
   serverError?: string | null;
   from?: string | null;
+  initialValues?: Partial<Values>;
+  action?: string;
+  submitLabel?: string;
+  submitPendingText?: string;
 }
 
 interface Values {
@@ -33,8 +37,15 @@ const EMPTY: Values = {
 
 const NUMERIC_FIELDS = ["pill_count", "dose_morning", "dose_midday", "dose_night"] as const;
 
-export default function AddMedicationForm({ serverError, from }: Props) {
-  const [values, setValues] = useState<Values>(EMPTY);
+export default function MedicationForm({
+  serverError,
+  from,
+  initialValues,
+  action = "/api/medications",
+  submitLabel = "Add medication",
+  submitPendingText = "Adding...",
+}: Props) {
+  const [values, setValues] = useState<Values>({ ...EMPTY, ...initialValues });
   const [errors, setErrors] = useState<Partial<Record<keyof Values, string>>>({});
 
   function setField(field: keyof Values, value: string) {
@@ -70,7 +81,7 @@ export default function AddMedicationForm({ serverError, from }: Props) {
   }
 
   return (
-    <form method="POST" action="/api/medications" className="space-y-4" onSubmit={handleSubmit} noValidate>
+    <form method="POST" action={action} className="space-y-4" onSubmit={handleSubmit} noValidate>
       <input type="hidden" name="from" value={from ?? ""} />
 
       <FormField
@@ -177,8 +188,8 @@ export default function AddMedicationForm({ serverError, from }: Props) {
 
       <ServerError message={serverError} />
 
-      <SubmitButton pendingText="Adding..." icon={<Plus className="size-4" />}>
-        Add medication
+      <SubmitButton pendingText={submitPendingText} icon={<Plus className="size-4" />}>
+        {submitLabel}
       </SubmitButton>
     </form>
   );

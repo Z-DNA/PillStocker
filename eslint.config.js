@@ -65,6 +65,13 @@ const astroConfig = tseslint.config({
     "astro/no-set-html-directive": "error",
     "astro/no-unused-css-selector": "warn",
     "astro/prefer-class-list-directive": "warn",
+    // typescript-eslint's no-misused-promises crashes (not just errors) on a
+    // top-level `return` in Astro frontmatter — its checkReturnStatement can't
+    // find an enclosing-function parent for the parsed virtual module. The
+    // standard server-side page redirect (`return Astro.redirect(...)`) needs
+    // exactly that top-level return, so the rule is incompatible with .astro
+    // pages. Scoped off here only; .ts/.tsx keep it (set in baseConfig).
+    "@typescript-eslint/no-misused-promises": "off",
   },
 });
 
