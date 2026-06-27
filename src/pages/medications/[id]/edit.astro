@@ -1,0 +1,69 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import MedicationForm from "@/components/medications/MedicationForm";
+import { createClient } from "@/lib/supabase";
+import { getMedicationById } from "@/lib/medications/queries";
+
+const { id } = Astro.params;
+const error = Astro.url.searchParams.get("error");
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+let configError = false;
+let med = null;
+if (!supabase) {
+  configError = true;
+} else if (id) {
+  med = await getMedicationById(supabase, id);
+}
+
+// Not found / not owned / archived → bounce to the list (RLS hides non-owned rows).
+if (!configError && !med) {
+  return Astro.redirect("/medications");
+}
+
+// Map the row to the form's string-based Values shape (numbers → strings,
+// null → "", expiry_date passed through as YYYY-MM-DD).
+const numToStr = (n: number | null) => (n === null ? "" : String(n));
+const initialValues = med
+  ? {
+      name: med.name,
+      pill_count: numToStr(med.pill_count),
+      dose_morning: numToStr(med.dose_morning),
+      dose_midday: numToStr(med.dose_midday),
+      dose_night: numToStr(med.dose_night),
+      expiry_date: med.expiry_date ?? "",
+      active_substance: med.active_substance ?? "",
+      description: med.description ?? "",
+    }
+  : undefined;
+---
+
+<Layout title="Edit medication">
+  <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
+    <div class="w-full max-w-md rounded-2xl border border-white/10 bg-white/10 p-8 text-white backdrop-blur-xl">
+      <h1
+        class="mb-6 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-center text-2xl font-bold text-transparent"
+      >
+        Edit medication
+      </h1>
+      {
+        configError ? (
+          <p class="text-center text-sm text-red-200">Supabase is not configured.</p>
+        ) : (
+          <MedicationForm
+            initialValues={initialValues}
+            action={`/api/medications/${id}/edit`}
+            submitLabel="Save changes"
+            submitPendingText="Saving..."
+            serverError={error}
+            client:load
+          />
+        )
+      }
+      <p class="mt-4 text-center text-sm text-blue-100/60">
+        <a href="/medications" class="text-purple-300 hover:underline">Back to medications</a>
+      </p>
+    </div>
+  </div>
+</Layout>

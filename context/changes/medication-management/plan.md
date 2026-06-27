@@ -511,36 +511,36 @@ archive) through the existing UPDATE RLS policy.
 
 #### Automated
 
-- [x] 1.1 `npx astro sync` regenerates types without error
-- [x] 1.2 `npm run build` passes
-- [x] 1.3 `npm run lint` passes
+- [x] 1.1 `npx astro sync` regenerates types without error — 7bf214f
+- [x] 1.2 `npm run build` passes — 7bf214f
+- [x] 1.3 `npm run lint` passes — 7bf214f
 
 #### Manual
 
-- [x] 1.4 Review the four query helpers (id + archived_at scope, 0-row detection, notFound)
-- [x] 1.5 Confirm `refillMedication` treats null current count as 0 and adds
-- [x] 1.6 Confirm the create route parses identically via the shared module (no local copies)
+- [x] 1.4 Review the four query helpers (id + archived_at scope, 0-row detection, notFound) — 7bf214f
+- [x] 1.5 Confirm `refillMedication` treats null current count as 0 and adds — 7bf214f
+- [x] 1.6 Confirm the create route parses identically via the shared module (no local copies) — 7bf214f
 
 ### Phase 2: Manage page + edit (read + edit write path)
 
 #### Automated
 
-- [ ] 2.1 `npx astro sync` passes
-- [ ] 2.2 `npm run build` passes
-- [ ] 2.3 `npm run lint` passes
-- [ ] 2.4 Add flow compiles against the renamed `MedicationForm`
+- [x] 2.1 `npx astro sync` passes
+- [x] 2.2 `npm run build` passes
+- [x] 2.3 `npm run lint` passes
+- [x] 2.4 Add flow compiles against the renamed `MedicationForm`
 
 #### Manual
 
-- [ ] 2.5 "Edit" from the run-out list pre-fills the form with current values
-- [ ] 2.6 "Edit" from the shelf pre-fills (incl. expiry)
-- [ ] 2.7 Editing name + absolute count + dose saves and re-forecasts on the list
-- [ ] 2.8 Editing the expiry date updates the shelf band/date
-- [ ] 2.9 Setting the count to 0 via edit shows "Out now"
-- [ ] 2.10 Blank name (direct POST) rejected back to the manage page with an error
-- [ ] 2.11 Negative count rejected with an error
-- [ ] 2.12 Nonexistent / not-owned id at `/edit` redirects to `/medications`
-- [ ] 2.13 Add flow unaffected (still adds, still returns to the right view)
+- [x] 2.5 "Edit" from the run-out list pre-fills the form with current values
+- [x] 2.6 "Edit" from the shelf pre-fills (incl. expiry)
+- [x] 2.7 Editing name + absolute count + dose saves and re-forecasts on the list
+- [x] 2.8 Editing the expiry date updates the shelf band/date
+- [x] 2.9 Setting the count to 0 via edit shows "Out now"
+- [x] 2.10 Blank name (direct POST) rejected back to the manage page with an error
+- [x] 2.11 Negative count rejected with an error
+- [x] 2.12 Nonexistent / not-owned id at `/edit` redirects to `/medications`
+- [x] 2.13 Add flow unaffected (still adds, still returns to the right view)
 
 ### Phase 3: Refill + archive (remaining write paths)
 
