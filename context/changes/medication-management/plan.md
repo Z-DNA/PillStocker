@@ -511,15 +511,15 @@ archive) through the existing UPDATE RLS policy.
 
 #### Automated
 
-- [ ] 1.1 `npx astro sync` regenerates types without error
-- [ ] 1.2 `npm run build` passes
-- [ ] 1.3 `npm run lint` passes
+- [x] 1.1 `npx astro sync` regenerates types without error
+- [x] 1.2 `npm run build` passes
+- [x] 1.3 `npm run lint` passes
 
 #### Manual
 
-- [ ] 1.4 Review the four query helpers (id + archived_at scope, 0-row detection, notFound)
-- [ ] 1.5 Confirm `refillMedication` treats null current count as 0 and adds
-- [ ] 1.6 Confirm the create route parses identically via the shared module (no local copies)
+- [x] 1.4 Review the four query helpers (id + archived_at scope, 0-row detection, notFound)
+- [x] 1.5 Confirm `refillMedication` treats null current count as 0 and adds
+- [x] 1.6 Confirm the create route parses identically via the shared module (no local copies)
 
 ### Phase 2: Manage page + edit (read + edit write path)
 
