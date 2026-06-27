@@ -330,20 +330,20 @@ F-01 `medications` rows through `getActiveMedications`.
 
 #### Automated
 
-- [ ] 1.1 `npx astro sync` regenerates types without error
-- [ ] 1.2 `npm run build` passes
-- [ ] 1.3 `npm run lint` passes
+- [x] 1.1 `npx astro sync` regenerates types without error
+- [x] 1.2 `npm run build` passes
+- [x] 1.3 `npm run lint` passes
 
 #### Manual
 
-- [ ] 1.4 Review `summarizeCabinet` membership rules + date parsing
-- [ ] 1.5 Seeded: ~10-day med counted "running low"; safe/no-forecast meds not counted
-- [ ] 1.6 Seeded: ~30-day + already-expired meds both counted in "expiring soon / expired"
-- [ ] 1.7 Count cards link to `/medications` and `/medications/shelf`
-- [ ] 1.8 All-clear message shows when meds exist but both counts are 0
-- [ ] 1.9 "Add your first medication" CTA shows on an empty account
-- [ ] 1.10 Query error renders the error banner (not silent zeros)
-- [ ] 1.11 Unauthenticated `/dashboard` redirects to `/auth/signin`
+- [x] 1.4 Review `summarizeCabinet` membership rules + date parsing
+- [x] 1.5 Seeded: ~10-day med counted "running low"; safe/no-forecast meds not counted
+- [x] 1.6 Seeded: ~30-day + already-expired meds both counted in "expiring soon / expired"
+- [x] 1.7 Count cards link to `/medications` and `/medications/shelf`
+- [x] 1.8 All-clear message shows when meds exist but both counts are 0
+- [x] 1.9 "Add your first medication" CTA shows on an empty account
+- [x] 1.10 Query error renders the error banner (not silent zeros)
+- [x] 1.11 Unauthenticated `/dashboard` redirects to `/auth/signin`
 
 ### Phase 2: Make it the landing + nav
 
