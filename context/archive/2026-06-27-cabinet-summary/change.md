@@ -1,9 +1,10 @@
 ---
 change_id: cabinet-summary
 title: Cabinet summary
-status: impl_reviewed
+status: archived
 created: 2026-06-27
 updated: 2026-06-27
+archived_at: 2026-06-27T14:02:46Z
 ---
 
 ## Notes
