@@ -546,16 +546,16 @@ archive) through the existing UPDATE RLS policy.
 
 #### Automated
 
-- [x] 3.1 `npx astro sync` passes
-- [x] 3.2 `npm run build` passes
-- [x] 3.3 `npm run lint` passes
+- [x] 3.1 `npx astro sync` passes — c46afcf
+- [x] 3.2 `npm run build` passes — c46afcf
+- [x] 3.3 `npm run lint` passes — c46afcf
 
 #### Manual
 
-- [x] 3.4 Refill +30 on a 5-pill med → shows 35 and a re-computed run-out
-- [x] 3.5 Refill a null-count med → count becomes exactly the refill amount
-- [x] 3.6 Refill of 0 / negative / blank rejected; count unchanged
-- [x] 3.7 Archive cancel → no change; confirm → gone from list AND shelf
-- [x] 3.8 Archived row persists in Studio with `archived_at` set (no hard delete)
-- [x] 3.9 Refill/archive of a not-owned/nonexistent id fails cleanly, no cross-user mutation
-- [x] 3.10 Re-archiving an already-archived med is a not-found no-op
+- [x] 3.4 Refill +30 on a 5-pill med → shows 35 and a re-computed run-out — c46afcf
+- [x] 3.5 Refill a null-count med → count becomes exactly the refill amount — c46afcf
+- [x] 3.6 Refill of 0 / negative / blank rejected; count unchanged — c46afcf
+- [x] 3.7 Archive cancel → no change; confirm → gone from list AND shelf — c46afcf
+- [x] 3.8 Archived row persists in Studio with `archived_at` set (no hard delete) — c46afcf
+- [x] 3.9 Refill/archive of a not-owned/nonexistent id fails cleanly, no cross-user mutation — c46afcf
+- [x] 3.10 Re-archiving an already-archived med is a not-found no-op — c46afcf
