@@ -14,7 +14,14 @@ let med = null;
 if (!supabase) {
   configError = true;
 } else if (id) {
-  med = await getMedicationById(supabase, id);
+  try {
+    med = await getMedicationById(supabase, id);
+  } catch (err) {
+    // A thrown Postgrest error (transient / RLS) is unrecoverable for a page
+    // that needs the row — bounce to the list rather than render a 500.
+    console.error("Failed to load medication for edit", err);
+    return Astro.redirect("/medications");
+  }
 }
 
 // Not found / not owned / archived → bounce to the list (RLS hides non-owned rows).

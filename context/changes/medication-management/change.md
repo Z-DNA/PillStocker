@@ -1,7 +1,7 @@
 ---
 change_id: medication-management
 title: Medication management
-status: implemented
+status: impl_reviewed
 created: 2026-06-27
 updated: 2026-06-27
 ---
