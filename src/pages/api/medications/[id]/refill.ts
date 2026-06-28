@@ -4,9 +4,10 @@ import { refillMedication } from "@/lib/medications/queries";
 import { asString } from "@/lib/medications/parse";
 import { returnPathFor } from "@/lib/medications/navigation";
 
-// Redirect back to the manage page, preserving the error message + origin token.
+// Redirect back to the manage page, scoping the error to the refill control
+// (rendered next to "Update stock", not the edit form) and preserving origin.
 function backToEdit(id: string, message: string, from: string): string {
-  const params = new URLSearchParams({ error: message });
+  const params = new URLSearchParams({ refillError: message });
   if (from) {
     params.set("from", from);
   }

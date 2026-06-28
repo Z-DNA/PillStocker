@@ -6,6 +6,8 @@ import { getMedicationById } from "@/lib/medications/queries";
 
 const { id } = Astro.params;
 const error = Astro.url.searchParams.get("error");
+const refillError = Astro.url.searchParams.get("refillError");
+const archiveError = Astro.url.searchParams.get("archiveError");
 const from = Astro.url.searchParams.get("from");
 const backHref = from === "shelf" ? "/medications/shelf" : "/medications";
 const backLabel = from === "shelf" ? "Back to shelf" : "Back to medications";
@@ -91,6 +93,11 @@ const initialValues = med
                 Add to — or, with a negative number, subtract from — the current pill count (leaves other fields
                 untouched). The total can't drop below 0.
               </p>
+              {refillError && (
+                <p class="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+                  {refillError}
+                </p>
+              )}
               <button
                 type="submit"
                 class="w-full rounded-lg bg-purple-500/80 px-4 py-2 text-sm font-medium text-white hover:bg-purple-500"
@@ -107,6 +114,11 @@ const initialValues = med
               onsubmit="return confirm('Archive this medication? It will leave your active views (its record is kept).')"
             >
               <input type="hidden" name="from" value={from ?? ""} />
+              {archiveError && (
+                <p class="mb-2 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+                  {archiveError}
+                </p>
+              )}
               <button
                 type="submit"
                 class="w-full rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-200 hover:bg-red-500/20"
