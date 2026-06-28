@@ -2,12 +2,7 @@ import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { createMedication, type NewMedicationInput } from "@/lib/medications/queries";
 import { asString, optionalDate, optionalText, parseOptionalNumber } from "@/lib/medications/parse";
-
-// Map the symbolic origin token to a hardcoded internal path. Never echoes a
-// user-supplied URL, so there is no open-redirect surface.
-function returnPathFor(from: string): string {
-  return from === "shelf" ? "/medications/shelf" : "/medications";
-}
+import { returnPathFor } from "@/lib/medications/navigation";
 
 // Redirect back to the add form, preserving the origin token so an error
 // round-trip keeps the user's launch context.

@@ -1,10 +1,15 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { archiveMedication } from "@/lib/medications/queries";
+import { asString } from "@/lib/medications/parse";
+import { returnPathFor } from "@/lib/medications/navigation";
 
-// Redirect back to the manage page, preserving the error message.
-function backToEdit(id: string, message: string): string {
+// Redirect back to the manage page, preserving the error message + origin token.
+function backToEdit(id: string, message: string, from: string): string {
   const params = new URLSearchParams({ error: message });
+  if (from) {
+    params.set("from", from);
+  }
   return `/medications/${id}/edit?${params.toString()}`;
 }
 
@@ -24,15 +29,18 @@ export const POST: APIRoute = async (context) => {
     return context.redirect("/medications");
   }
 
+  const form = await context.request.formData();
+  const from = asString(form.get("from")).trim();
+
   // Soft-delete only. archiveMedication filters `archived_at IS NULL`, so a
   // second archive (or a not-owned id) matches 0 rows → notFound. Never deletes.
   const { error, notFound } = await archiveMedication(supabase, id);
   if (notFound) {
-    return context.redirect(backToEdit(id, "Medication not found"));
+    return context.redirect(backToEdit(id, "Medication not found", from));
   }
   if (error) {
-    return context.redirect(backToEdit(id, error.message));
+    return context.redirect(backToEdit(id, error.message, from));
   }
 
-  return context.redirect("/medications");
+  return context.redirect(returnPathFor(from));
 };
