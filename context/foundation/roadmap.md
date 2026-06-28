@@ -3,7 +3,7 @@ project: PillStocker
 version: 1
 status: draft
 created: 2026-06-12
-updated: 2026-06-21
+updated: 2026-06-28
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -17,7 +17,7 @@ top_blocker: time
 
 ## Vision recap
 
-PillStocker helps people on multiple long-term medications see, in one place, when each medication will run out and when it will expire — surfacing shortfalls *before* the mid-week pill-organizer moment when one med turns out to be short, and flagging expired stock before it is taken or re-bought. The product **wedge** — the one trait that, if removed, makes PillStocker indistinguishable from an ordinary dose-reminder app — is doing two things existing tools don't: forecasting depletion from package-size math plus morning/midday/night dosing, and tracking inventory by active substance rather than brand name. The MVP delivers the forecasting and expiry halves; substance-level deduplication and out-of-app reminders are deferred to v2.
+PillStocker helps people on multiple long-term medications see, in one place, when each medication will run out and when it will expire — surfacing shortfalls _before_ the mid-week pill-organizer moment when one med turns out to be short, and flagging expired stock before it is taken or re-bought. The product **wedge** — the one trait that, if removed, makes PillStocker indistinguishable from an ordinary dose-reminder app — is doing two things existing tools don't: forecasting depletion from package-size math plus morning/midday/night dosing, and tracking inventory by active substance rather than brand name. The MVP delivers the forecasting and expiry halves; substance-level deduplication and out-of-app reminders are deferred to v2.
 
 ## North star
 
@@ -27,13 +27,13 @@ PillStocker helps people on multiple long-term medications see, in one place, wh
 
 ## At a glance
 
-| ID    | Change ID              | Outcome (user can …)                                                          | Prerequisites    | PRD refs                                | Status   |
-| ----- | ---------------------- | ----------------------------------------------------------------------------- | ---------------- | --------------------------------------- | -------- |
-| F-01  | medication-data-model  | (foundation) medication record schema with owner-only RLS + soft-delete; typed access | —        | FR-002, FR-005, NFR                     | done     |
-| S-01  | runout-forecast        | add a med with dosing and see its predicted run-out date, colour-coded & sorted | F-01           | US-01, FR-001, FR-002, FR-006, FR-007, FR-008 | done     |
-| S-02  | expiry-shelf           | see meds with expiry dates flagged (expired vs soon) and sorted soonest-first  | F-01, S-01      | US-02, FR-002, FR-010                   | done     |
-| S-03  | medication-management  | refill, edit, and archive (soft-delete) a medication                           | F-01, S-01      | FR-003, FR-004, FR-005                  | proposed |
-| S-04  | cabinet-summary        | see a landing screen counting meds running low and expiring soon               | F-01, S-01, S-02 | FR-011                                  | proposed |
+| ID   | Change ID             | Outcome (user can …)                                                                  | Prerequisites    | PRD refs                                      | Status   |
+| ---- | --------------------- | ------------------------------------------------------------------------------------- | ---------------- | --------------------------------------------- | -------- |
+| F-01 | medication-data-model | (foundation) medication record schema with owner-only RLS + soft-delete; typed access | —                | FR-002, FR-005, NFR                           | done     |
+| S-01 | runout-forecast       | add a med with dosing and see its predicted run-out date, colour-coded & sorted       | F-01             | US-01, FR-001, FR-002, FR-006, FR-007, FR-008 | done     |
+| S-02 | expiry-shelf          | see meds with expiry dates flagged (expired vs soon) and sorted soonest-first         | F-01, S-01       | US-02, FR-002, FR-010                         | done     |
+| S-03 | medication-management | refill, edit, and archive (soft-delete) a medication                                  | F-01, S-01       | FR-003, FR-004, FR-005                        | done     |
+| S-04 | cabinet-summary       | see a landing screen counting meds running low and expiring soon                      | F-01, S-01, S-02 | FR-011                                        | proposed |
 
 ## Baseline
 
@@ -64,7 +64,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Slices
 
-### S-01: Run-out forecast (add + daily view)  ★ north star
+### S-01: Run-out forecast (add + daily view) ★ north star
 
 - **Outcome:** user adds a medication with a pill count and morning/midday/night dosing, then sees its predicted run-out date, colour-coded by proximity (green ≥14 days / yellow 7–14 / red <7) and ordered soonest-run-out first.
 - **Change ID:** runout-forecast
@@ -99,7 +99,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Supports the secondary Success Criterion — refills and edits keep predictions trustworthy over time. Bundles three management actions on one record (refill, edit, archive) that share the edit surface; if `/10x-plan` finds this too broad, it may split into separate changes. Guardrail: archive is soft-delete, so a medication never vanishes; refills are additive and edits set an absolute count to correct drift.
-- **Status:** proposed
+- **Status:** done
 
 ### S-04: Cabinet summary landing
 
@@ -115,13 +115,13 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Backlog Handoff
 
-| Roadmap ID | Change ID              | Suggested issue title                          | Ready for `/10x-plan` | Notes |
-| ---------- | ---------------------- | ---------------------------------------------- | --------------------- | ----- |
-| F-01       | medication-data-model  | Medication record schema + owner-only RLS      | done                  | Done — archived 2026-06-12 → `context/archive/2026-06-12-medication-data-model/` |
-| S-01       | runout-forecast        | Add medication + run-out forecast (daily view) | yes                   | North star; F-01 done — run `/10x-plan runout-forecast` |
-| S-02       | expiry-shelf           | Expiry shelf view                              | no                    | After S-01; parallel with S-03 |
-| S-03       | medication-management  | Refill, edit, and archive medications          | no                    | After S-01; parallel with S-02 |
-| S-04       | cabinet-summary        | Summary landing (running-low / expiring counts) | no                   | After S-01 + S-02 |
+| Roadmap ID | Change ID             | Suggested issue title                           | Ready for `/10x-plan` | Notes                                                                            |
+| ---------- | --------------------- | ----------------------------------------------- | --------------------- | -------------------------------------------------------------------------------- |
+| F-01       | medication-data-model | Medication record schema + owner-only RLS       | done                  | Done — archived 2026-06-12 → `context/archive/2026-06-12-medication-data-model/` |
+| S-01       | runout-forecast       | Add medication + run-out forecast (daily view)  | yes                   | North star; F-01 done — run `/10x-plan runout-forecast`                          |
+| S-02       | expiry-shelf          | Expiry shelf view                               | no                    | After S-01; parallel with S-03                                                   |
+| S-03       | medication-management | Refill, edit, and archive medications           | no                    | After S-01; parallel with S-02                                                   |
+| S-04       | cabinet-summary       | Summary landing (running-low / expiring counts) | no                    | After S-01 + S-02                                                                |
 
 This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One row per `F-NN`/`S-NN`; copy a row into an issue, do not duplicate the detailed body.
 
@@ -158,3 +158,4 @@ All four are lifted from the PRD's `## Open Questions`. None blocks an MVP slice
 - **F-01: (foundation) medication record schema with owner-only RLS + soft-delete; typed access** — Archived 2026-06-12 → `context/archive/2026-06-12-medication-data-model/`. Lesson: —.
 - **S-01: user adds a medication with a pill count and morning/midday/night dosing, then sees its predicted run-out date, colour-coded by proximity (green ≥14 days / yellow 7–14 / red <7) and ordered soonest-run-out first.** — Archived 2026-06-14 → `context/archive/2026-06-12-runout-forecast/`. Lesson: —.
 - **S-02: user records an expiry date on a medication and sees a shelf view that flags expired vs soon-to-expire items, colour-coded and ordered soonest-expiry first.** — Archived 2026-06-21 → `context/archive/2026-06-14-expiry-shelf/`. Lesson: —.
+- **S-03: user can record a refill that increases a medication's pill count, edit any medication's details, and archive a medication (soft-delete) so it leaves active views while its record and history are preserved.** — Archived 2026-06-28 → `context/archive/2026-06-27-medication-management/`. Lesson: —.
