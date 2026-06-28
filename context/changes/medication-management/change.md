@@ -22,9 +22,9 @@ Roadmap slice S-03 (PRD FR-003 refill, FR-004 edit, FR-005 archive). Planned 202
   paths (create/edit/refill/archive).
 - **Refill accepts signed adjustments.** The refill control now takes any
   non-zero whole number; a negative value corrects the count down, rejected only
-  if the resulting total would drop below 0 (guard in `refillMedication`). This
-  **diverges from PRD FR-003** ("additive top-up, N > 0") by product direction —
-  if it stands, update FR-003 to "signed stock adjustment, total ≥ 0".
+  if the resulting total would drop below 0 (guard in `refillMedication`). PRD
+  FR-003 was reworded to match (signed stock adjustment, total ≥ 0) on
+  2026-06-28.
 
 ### Deferred to next slice — forecast staleness (CRITICAL, PO-flagged)
 
