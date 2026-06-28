@@ -532,17 +532,17 @@ archive) through the existing UPDATE RLS policy.
 
 #### Manual
 
-> Re-opened by impl-review F2 (2026-06-27): logic-verified against the plan contract but NOT executed against a live Supabase (operationally unavailable). Run these before `/10x-archive`. Code landed in ebe16a2.
+> Verified live against a local Supabase on 2026-06-28 (PO). Code landed in ebe16a2; edit-from-shelf now returns to the shelf per the post-review origin fix.
 
-- [ ] 2.5 "Edit" from the run-out list pre-fills the form with current values
-- [ ] 2.6 "Edit" from the shelf pre-fills (incl. expiry)
-- [ ] 2.7 Editing name + absolute count + dose saves and re-forecasts on the list
-- [ ] 2.8 Editing the expiry date updates the shelf band/date
-- [ ] 2.9 Setting the count to 0 via edit shows "Out now"
-- [ ] 2.10 Blank name (direct POST) rejected back to the manage page with an error
-- [ ] 2.11 Negative count rejected with an error
-- [ ] 2.12 Nonexistent / not-owned id at `/edit` redirects to `/medications`
-- [ ] 2.13 Add flow unaffected (still adds, still returns to the right view)
+- [x] 2.5 "Edit" from the run-out list pre-fills the form with current values — ebe16a2
+- [x] 2.6 "Edit" from the shelf pre-fills (incl. expiry) — ebe16a2
+- [x] 2.7 Editing name + absolute count + dose saves and re-forecasts on the list — ebe16a2
+- [x] 2.8 Editing the expiry date updates the shelf band/date — ebe16a2
+- [x] 2.9 Setting the count to 0 via edit shows "Out now" — ebe16a2
+- [x] 2.10 Blank name (direct POST) rejected back to the manage page with an error — ebe16a2
+- [x] 2.11 Negative count rejected with an error — ebe16a2
+- [x] 2.12 Nonexistent / not-owned id at `/edit` redirects to `/medications` — ebe16a2
+- [x] 2.13 Add flow unaffected (still adds, still returns to the right view) — ebe16a2
 
 ### Phase 3: Refill + archive (remaining write paths)
 
@@ -554,12 +554,12 @@ archive) through the existing UPDATE RLS policy.
 
 #### Manual
 
-> Re-opened by impl-review F2 (2026-06-27): logic-verified against the plan contract but NOT executed against a live Supabase (operationally unavailable). Run these before `/10x-archive`. Code landed in c46afcf.
+> Verified live against a local Supabase on 2026-06-28 (PO). Code landed in c46afcf. Row 3.6 was superseded by the S-03 post-review change: refill now accepts negative adjustments — only blank / 0 / non-integer / a result below 0 are rejected (see change.md).
 
-- [ ] 3.4 Refill +30 on a 5-pill med → shows 35 and a re-computed run-out
-- [ ] 3.5 Refill a null-count med → count becomes exactly the refill amount
-- [ ] 3.6 Refill of 0 / negative / blank rejected; count unchanged
-- [ ] 3.7 Archive cancel → no change; confirm → gone from list AND shelf
-- [ ] 3.8 Archived row persists in Studio with `archived_at` set (no hard delete)
-- [ ] 3.9 Refill/archive of a not-owned/nonexistent id fails cleanly, no cross-user mutation
-- [ ] 3.10 Re-archiving an already-archived med is a not-found no-op
+- [x] 3.4 Refill +30 on a 5-pill med → shows 35 and a re-computed run-out — c46afcf
+- [x] 3.5 Refill a null-count med → count becomes exactly the refill amount — c46afcf
+- [x] 3.6 Refill of 0 / negative / blank rejected; count unchanged — c46afcf
+- [x] 3.7 Archive cancel → no change; confirm → gone from list AND shelf — c46afcf
+- [x] 3.8 Archived row persists in Studio with `archived_at` set (no hard delete) — c46afcf
+- [x] 3.9 Refill/archive of a not-owned/nonexistent id fails cleanly, no cross-user mutation — c46afcf
+- [x] 3.10 Re-archiving an already-archived med is a not-found no-op — c46afcf
