@@ -6,6 +6,9 @@ import { getMedicationById } from "@/lib/medications/queries";
 
 const { id } = Astro.params;
 const error = Astro.url.searchParams.get("error");
+const from = Astro.url.searchParams.get("from");
+const backHref = from === "shelf" ? "/medications/shelf" : "/medications";
+const backLabel = from === "shelf" ? "Back to shelf" : "Back to medications";
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 
@@ -65,30 +68,34 @@ const initialValues = med
               submitLabel="Save changes"
               submitPendingText="Saving..."
               serverError={error}
+              from={from}
               client:load
             />
 
             <div class="my-6 border-t border-white/10" />
 
             <form method="POST" action={`/api/medications/${id}/refill`} class="space-y-2">
+              <input type="hidden" name="from" value={from ?? ""} />
               <label for="add_count" class="block text-sm text-blue-100/80">
-                Refill (+N)
+                Adjust stock (±N)
               </label>
               <input
                 id="add_count"
                 name="add_count"
                 type="number"
-                min="1"
                 step="1"
-                placeholder="e.g. 30"
+                placeholder="e.g. 30 or -5"
                 class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-blue-100/30 focus:border-purple-400/60 focus:outline-none"
               />
-              <p class="text-xs text-blue-100/40">Adds to the current pill count (leaves other fields untouched).</p>
+              <p class="text-xs text-blue-100/40">
+                Add to — or, with a negative number, subtract from — the current pill count (leaves other fields
+                untouched). The total can't drop below 0.
+              </p>
               <button
                 type="submit"
                 class="w-full rounded-lg bg-purple-500/80 px-4 py-2 text-sm font-medium text-white hover:bg-purple-500"
               >
-                Add to stock
+                Update stock
               </button>
             </form>
 
@@ -99,6 +106,7 @@ const initialValues = med
               action={`/api/medications/${id}/archive`}
               onsubmit="return confirm('Archive this medication? It will leave your active views (its record is kept).')"
             >
+              <input type="hidden" name="from" value={from ?? ""} />
               <button
                 type="submit"
                 class="w-full rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-200 hover:bg-red-500/20"
@@ -110,7 +118,7 @@ const initialValues = med
         )
       }
       <p class="mt-4 text-center text-sm text-blue-100/60">
-        <a href="/medications" class="text-purple-300 hover:underline">Back to medications</a>
+        <a href={backHref} class="text-purple-300 hover:underline">{backLabel}</a>
       </p>
     </div>
   </div>

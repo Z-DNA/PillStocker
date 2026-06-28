@@ -82,35 +82,40 @@ export async function updateMedication(
 }
 
 /**
- * Additive top-up: read the current count (null → 0), add `addCount` (caller
- * guarantees > 0), and write the sum. Read-then-write; a concurrent
- * double-refill could lose an update — accepted at single-user MVP scale. A
- * null fetch (missing / not-owned / archived) surfaces as `notFound`.
+ * Apply a signed adjustment to the current count (null → 0). `delta` may be
+ * negative (a downward correction), but the resulting total can never drop
+ * below 0 — that case surfaces as `negative` (the caller rejects it). Read-then-
+ * write; a concurrent double-adjust could lose an update — accepted at single-
+ * user MVP scale. A null fetch (missing / not-owned / archived) → `notFound`.
  */
 export async function refillMedication(
   supabase: SupabaseClient<Database>,
   id: string,
-  addCount: number,
-): Promise<{ error: PostgrestError | null; notFound: boolean }> {
+  delta: number,
+): Promise<{ error: PostgrestError | null; notFound: boolean; negative: boolean }> {
   let current: MedicationRow | null;
   try {
     current = await getMedicationById(supabase, id);
   } catch (err) {
-    return { error: err as PostgrestError, notFound: false };
+    return { error: err as PostgrestError, notFound: false, negative: false };
   }
   if (!current) {
-    return { error: null, notFound: true };
+    return { error: null, notFound: true, negative: false };
+  }
+  const newCount = (current.pill_count ?? 0) + delta;
+  if (newCount < 0) {
+    return { error: null, notFound: false, negative: true };
   }
   const { data, error } = await supabase
     .from("medications")
-    .update({ pill_count: (current.pill_count ?? 0) + addCount })
+    .update({ pill_count: newCount })
     .eq("id", id)
     .is("archived_at", null)
     .select();
   if (error) {
-    return { error, notFound: false };
+    return { error, notFound: false, negative: false };
   }
-  return { error: null, notFound: data.length === 0 };
+  return { error: null, notFound: data.length === 0, negative: false };
 }
 
 /**

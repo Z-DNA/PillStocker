@@ -2,10 +2,14 @@ import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { updateMedication, type EditMedicationInput } from "@/lib/medications/queries";
 import { asString, optionalDate, optionalText, parseOptionalNumber } from "@/lib/medications/parse";
+import { returnPathFor } from "@/lib/medications/navigation";
 
-// Redirect back to the manage page, preserving the error message.
-function backToEdit(id: string, message: string): string {
+// Redirect back to the manage page, preserving the error message + origin token.
+function backToEdit(id: string, message: string, from: string): string {
   const params = new URLSearchParams({ error: message });
+  if (from) {
+    params.set("from", from);
+  }
   return `/medications/${id}/edit?${params.toString()}`;
 }
 
@@ -26,10 +30,11 @@ export const POST: APIRoute = async (context) => {
   }
 
   const form = await context.request.formData();
+  const from = asString(form.get("from")).trim();
 
   const name = asString(form.get("name")).trim();
   if (!name) {
-    return context.redirect(backToEdit(id, "Name is required"));
+    return context.redirect(backToEdit(id, "Name is required", from));
   }
 
   const pillCount = parseOptionalNumber(form.get("pill_count"));
@@ -38,12 +43,12 @@ export const POST: APIRoute = async (context) => {
   const night = parseOptionalNumber(form.get("dose_night"));
 
   if (pillCount.invalid || morning.invalid || midday.invalid || night.invalid) {
-    return context.redirect(backToEdit(id, "Counts and doses must be numbers ≥ 0"));
+    return context.redirect(backToEdit(id, "Counts and doses must be numbers ≥ 0", from));
   }
 
   const expiry = optionalDate(form.get("expiry_date"));
   if (expiry.invalid) {
-    return context.redirect(backToEdit(id, "Expiry date is invalid"));
+    return context.redirect(backToEdit(id, "Expiry date is invalid", from));
   }
 
   const input: EditMedicationInput = {
@@ -59,11 +64,11 @@ export const POST: APIRoute = async (context) => {
 
   const { error, notFound } = await updateMedication(supabase, id, input);
   if (notFound) {
-    return context.redirect(backToEdit(id, "Medication not found"));
+    return context.redirect(backToEdit(id, "Medication not found", from));
   }
   if (error) {
-    return context.redirect(backToEdit(id, error.message));
+    return context.redirect(backToEdit(id, error.message, from));
   }
 
-  return context.redirect("/medications");
+  return context.redirect(returnPathFor(from));
 };
